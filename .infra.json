@@ -1,4 +1,5 @@
 {
 	"dependencies":["cart"],
-	"require":"infra.php"
+	"require":"infra.php",
+	"update":"update.php"
 }
