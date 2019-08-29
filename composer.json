@@ -1,0 +1,6 @@
+{
+	"name":"akiyatkin/catkit",
+	"require":{
+		"infrajs/cart":"~1"
+	}
+}
