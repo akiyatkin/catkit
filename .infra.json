@@ -1,5 +1,10 @@
 {
 	"dependencies":["cart"],
 	"require":"infra.php",
-	"update":"update.php"
+	"update":"update.php",
+	"clutch":{
+		"cart":[
+			"vendor/akiyatkin/catkit/"
+		]
+	}
 }
