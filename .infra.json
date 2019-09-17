@@ -1,6 +1,7 @@
 {
 	"dependencies":["cart"],
 	"require":"infra.php",
+	"conf":"akiyatkin\\catkit\\Catkit",
 	"update":"update.php",
 	"clutch":{
 		"cart":[
