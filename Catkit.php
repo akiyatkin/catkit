@@ -1,6 +1,5 @@
 <?php
-
-namespace akiyatkin\catkit\Catkit;
+namespace akiyatkin\catkit;
 
 class Catkit {
 	public static $conf;
