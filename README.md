@@ -12,6 +12,11 @@ prodart = article_nick
 Комплектация - Производитель Артикул item, Производитель Артикул item, Производитель Артикул item
 producer_nick article_nick &producer_nick2 article_nick2 item_nick2&producer_nick3 article_nick3 item_nick3&article_nick4
 
+
+
+	Группа в комплекте
+	Комплект
+
 Showcase-catalog.onload
 	kits - Комплект-nick
 onpriceload, onsearch

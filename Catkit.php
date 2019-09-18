@@ -5,14 +5,14 @@ use akiyatkin\showcase\Showcase;
 
 class Catkit {
 	public static $conf;
-	public static function implode($kit) {
+	public static function implode($kit, $char = '&') {
 		$catkit = [];
 		foreach ($kit as $p) {
 			$c = $p['article_nick'];
 			if ($p['item_nick']) $c .= ':'.$p['item_nick'];
 			$catkit[] = $c;
 		}
-		$catkit = implode('&', $catkit);
+		$catkit = implode($char, $catkit);
 		return $catkit;
 	}
 	public static function explode($catkit) {

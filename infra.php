@@ -11,8 +11,9 @@ Event::handler('Showcase-catalog.onload', function ($obj) {
 	$pos = &$obj['pos'];
 	if (empty($pos['more']['Комплект'])) return;
 	$r = Catkit::explode($pos['more']['Комплект']);
-	$pos['more']['kits'] = Catkit::implode($r);
+	$pos['more']['kits'] = Catkit::implode($r,',');
 });
+
 Event::handler('Showcase-priceonload', function () {
 	//Нужно посчитать комплекты для всех позиций по умолчанию
 	//Есть Комлпектация и нет Цены
@@ -21,7 +22,7 @@ Event::handler('Showcase-priceonload', function () {
 	$mark->setVal(':more.Комплектация.yes=1:count=5000');
 	$md = $mark->getData();
 	$data = Showcase::search($md);
-	foreach($data['list'] as $pos) {
+	foreach ($data['list'] as $pos) {
 		$r = Catkit::init($pos);
 		if (!$r) continue;
 		Prices::deleteProp($pos['model_id'], $pos['item_num'], 'Цена');
@@ -44,16 +45,21 @@ Event::handler('Showcase-position.onshow', function (&$pos){
 		$item_nick = $row['item_nick'];
 		return Showcase::getModel($producer_nick, $article_nick, $item_nick);
 	}, $kits);
-	return;
-	$mark = Showcase::getDefaultMark();
+});
+Event::handler('Showcase-position.onshow', function (&$pos){	
 	
-	//$mark->setVal(':more.kits.'.$kit.'=1:count=50');
-	$mark->setVal(':more.kits.yes=1:count=50');
+	if (empty($pos['Комплектация'])) return;
+
+	$kit = Catkit::implode([$pos]);	
+	$mark = Showcase::getDefaultMark();
+	$mark->setVal(':more.kits.'.$kit.'=1:count=50');
+	//$mark->setVal(':more.kits.yes=1:count=50');
 	$md = $mark->getData();
-	echo $kit;
-	echo '<pre>';
 	$data = Showcase::search($md);
-	print_r($data);
-	exit;
-	//kitlist
+	$pos['kitlist'] = array_reduce($data['list'], function ($carry, $p){
+		if (empty($p['Группа в комплекте'])) $p['Группа в комплекте'] = 'Другое';
+		if(empty($carry[$p['Группа в комплекте']])) $carry[$p['Группа в комплекте']] = [];
+		$carry[$p['Группа в комплекте']][] = $p;
+		return $carry;
+	},[]);
 });
