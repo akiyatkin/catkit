@@ -57,7 +57,10 @@ Event::handler('Showcase-position.onshow', function (&$pos){
 	$md = $mark->getData();
 	$data = Showcase::search($md);
 	$pos['kitlist'] = array_reduce($data['list'], function ($carry, $p){
-		if (empty($p['Группа в комплекте'])) $p['Группа в комплекте'] = 'Другое';
+		if (empty($p['Группа в комплекте'])) {
+			return;
+			$p['Группа в комплекте'] = 'Другое';
+		}
 		if(empty($carry[$p['Группа в комплекте']])) $carry[$p['Группа в комплекте']] = [];
 		$carry[$p['Группа в комплекте']][] = $p;
 		return $carry;
