@@ -118,7 +118,7 @@ Event::handler('Showcase-position.onsearch', function (&$pos){
 				$images[]= $p['images'][0];
 			}
 			if (empty($pos['images'])) $pos['images'] = [];
-			$pos['images'] = array_unique(array_merge($pos['images']), $images);
+			$pos['images'] = array_unique(array_merge($pos['images'], $images));
 		}
 	}
 });
