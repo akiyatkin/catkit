@@ -57,29 +57,33 @@ Event::handler('Showcase-position.onsearch', function (&$pos){
 			continue;
 		} else if (empty($p['Цена'])) {
 			$emptycost[] = $res['present'];
-			continue;
+			$p['Цена'] = false;
+			//continue;
 		}
 		$find[] = $res['present'];
 		$kit[] = $p;
+
+		
 		$cost += $p['Цена'];
+		
 	}
 	
 	//if ($cost) {
-		$pos['catkit'] = Catkit::implode($kit);
-		$pos['Комплектация'] = Catkit::present($kit);
-		$pos['Цена'] = $cost;
-		$pos['kit'] = $kit;
+	$pos['catkit'] = Catkit::implode($kit);
+	$pos['Комплектация'] = Catkit::present($kit);
+	$pos['Цена'] = $cost;
+	$pos['kit'] = $kit;
 
-		if ($emptycat) {
-			$pos['more']['Нет информации по комплектующим'] = implode(', ', array_unique($emptycat));
-		} else {
-			unset($pos['more']['Нет информации по комплектующим']);
-		}
-		if ($emptycost) {
-			$pos['more']['Нет цены по комплектующим'] = implode(', ', array_unique($emptycost));
-		} else {
-			unset($pos['more']['Нет цены по комплектующим']);
-		}
+	if ($emptycat) {
+		$pos['more']['Нет информации по комплектующим'] = implode(', ', array_unique($emptycat));
+	} else {
+		unset($pos['more']['Нет информации по комплектующим']);
+	}
+	if ($emptycost) {
+		$pos['more']['Нет цены по комплектующим'] = implode(', ', array_unique($emptycost));
+	} else {
+		unset($pos['more']['Нет цены по комплектующим']);
+	}
 		//return true;
 	//} else {
 		//var_dump($pos['Комплектация']);
@@ -100,34 +104,6 @@ Event::handler('Showcase-position.onsearch', function (&$pos){
 	//Ищем картинки если есть выбранный kit
 	//Свойство kit содержит массив созданный из Комплектации это выбранные комплектующие
 	setKitPhoto($pos);
-	/*$group = Showcase::getGroup($pos['group_nick']);
-	while ($group && empty($group['showcase']['photofromkitgroup'])) {
-		$group = $group['parent_nick']? Showcase::getGroup($group['parent_nick']) : false;
-	}
-	$photofromkitgroup = empty($group['showcase']['photofromkitgroup']) ? '' : $group['showcase']['photofromkitgroup'];
-	
-	if ($photofromkitgroup) {
-		$kitlist = array_reduce($pos['kit'], function ($carry, $p){
-			if (empty($p['Группа в комплекте'])) $p['Группа в комплекте'] = '';
-				
-			if(empty($carry[$p['Группа в комплекте']])) $carry[$p['Группа в комплекте']] = [];
-			$carry[$p['Группа в комплекте']][] = $p;
-			return $carry;
-		},[]);
-
-		
-		if (isset($kitlist[$photofromkitgroup])) {
-			$images = [];
-			foreach($kitlist[$photofromkitgroup] as $p) {
-				if (empty($p['images'])) continue;
-				$images[]= $p['images'][0];
-			}
-			if (empty($pos['images'])) $pos['images'] = [];
-			$pos['images'] = array_unique(array_merge($pos['images'], $images));
-		}
-		
-	}
-	*/
 });
 
 Event::handler('Showcase-position.onshow', function (&$pos){
@@ -160,23 +136,6 @@ Event::handler('Showcase-position.onshow', function (&$pos){
 	
 	if (empty($pos['kitlist'])) unset($pos['kitlist']);
 	setKitPhoto($pos);
-	/*if (empty($pos['kit'])) { //Нет выбранных комплектующих
-		$group = Showcase::getGroup($pos['group_nick']);
-		while ($group && empty($group['showcase']['photofromkitgroup'])) {
-			$group = $group['parent_nick']? Showcase::getGroup($group['parent_nick']) : false;
-		}
-		$photofromkitgroup = empty($group['showcase']['photofromkitgroup']) ? '' : $group['showcase']['photofromkitgroup'];
-		if ($photofromkitgroup && isset($pos['kitlist'][$photofromkitgroup])) {
-			$images = [];
-			foreach($pos['kitlist'][$photofromkitgroup] as $p) {
-				if (empty($p['images'])) continue;
-				$images[]= $p['images'][0];
-			}
-			if (empty($pos['images'])) $pos['images'] = [];
-			$pos['images'] = array_unique(array_merge($pos['images'], $images));
-			$pos['images'] = array_splice($pos['images'], 0, 5);
-		}
-	}*/
 });
 
 function setKitPhoto(&$pos) {
