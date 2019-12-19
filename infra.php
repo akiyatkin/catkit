@@ -139,88 +139,36 @@ Event::handler('Showcase-position.onshow', function (&$pos){
 });
 
 function setKitPhoto(&$pos) {
+
 	/*
-		У позиции уже есть фотки, и если нет главного компонента, они остаются
-		
-		search
-		1. (выбран главный) Оригинальные фото если есть или 1 фото выбранного главного компонента
-		1. (нет главного или не выбран) Оригинальные фото если есть + фото выбранных компонентов
-		
-		show
-		1. (не выбран главный) Оригинальные фото если есть + по 1 фото всех главных компонентов (Оставляем только 5 фоток, главных может быть много.)
-		1. (не выбран главный, нет главного) Оригинальные фото если есть + по 1 фото всех выбранных комплектующих
-		1. (выбран главный) Оригинальные фото если есть + 1 фото выбранного главного компонента + по 1 фото всех выбранных комплектующих
+		Если есть выбранные комплектации, то по одной фото каждого комплектующего добавляется в систему в добавленном порядке. В showcase.json добавлен параметр для групп firstkitphoto, в нём указывается "Группа в комплекте" фото комплектующих из этой группы встаёт на первое место. Но не выше, чем собственное фото системы.
 	*/
-
-	$group = Showcase::getGroup($pos['group_nick']);
-	while ($group && empty($group['showcase']['photofromkitgroup'])) {
-		$group = $group['parent_nick']? Showcase::getGroup($group['parent_nick']) : false;
-	}
-	$photofromkitgroup = empty($group['showcase']['photofromkitgroup']) ? '' : $group['showcase']['photofromkitgroup'];
 	
-
-	if (empty($pos['kit'])) { //Нет выбранного kit (Комплектующие, catkit, iscatkit)
-		if (isset($pos['kitlist'])) { //Есть комлпеткующие
-			if ($photofromkitgroup && isset($pos['kitlist'][$photofromkitgroup])) { //Берём все главные комплектующие
-				$images = [];
-				foreach($pos['kitlist'][$photofromkitgroup] as $p) {
-					if (empty($p['images'])) continue;
-					$images[] = $p['images'][0];
-				}
-				if (empty($pos['images'])) $pos['images'] = [];
-				$pos['images'] = array_unique(array_merge($pos['images'], $images));
-				$pos['images'] = array_splice($pos['images'], 0, 5);
-			} else { //Главный не определён и нет выбранных, но есть куча комплектующих - их слишком много.
-				//Остаётся images
-			}
-		}
-	} else { //Есть выбранный kit
-		if ($photofromkitgroup) {
+	if (isset($pos['kit'])) {
+		$group = Showcase::getGroup($pos['group_nick']);
+		$firstkitphoto = empty($group['showcase']['firstkitphoto']) ? '' : $group['showcase']['firstkitphoto'];
+		$images = [];
+		if ($firstkitphoto) {
 			$kitlist = array_reduce($pos['kit'], function ($carry, $p){
 				if (empty($p['Группа в комплекте'])) $p['Группа в комплекте'] = '';
 					
 				if(empty($carry[$p['Группа в комплекте']])) $carry[$p['Группа в комплекте']] = [];
 				$carry[$p['Группа в комплекте']][] = $p;
 				return $carry;
-			},[]);
-
-			
-			if (isset($kitlist[$photofromkitgroup])) { //и есть выбранный главный компонент
-				$images = [];
-				foreach($kitlist[$photofromkitgroup] as $p) { //Берём фото главного
+			},[]);	
+			if (isset($kitlist[$firstkitphoto])) { //и есть выбранный главный компонент
+				foreach ($kitlist[$firstkitphoto] as $p) { //Берём фото главного
 					if (empty($p['images'])) continue;
 					$images[]= $p['images'][0];
 				}
-				foreach ($pos['kit'] as $p) { //Берём фото остальных
-					if (empty($p['images'])) continue;
-					$images[]= $p['images'][0];
-				}
-
-				if (empty($pos['images'])) $pos['images'] = [];
-				$pos['images'] = array_unique(array_merge($pos['images'], $images));
-			} else { //Главный компонент не выбран
-				if (isset($pos['kitlist'])) { //Берём все главные комплектующие
-					if ($photofromkitgroup && isset($pos['kitlist'][$photofromkitgroup])) {
-						$images = [];
-						foreach($pos['kitlist'][$photofromkitgroup] as $p) {
-							if (empty($p['images'])) continue;
-							$images[] = $p['images'][0];
-						}
-						if (empty($pos['images'])) $pos['images'] = [];
-						$pos['images'] = array_unique(array_merge($pos['images'], $images));
-						$pos['images'] = array_splice($pos['images'], 0, 5);
-					}
-				}
 			}
-			
-		} else {
-			foreach ($pos['kit'] as $p) { //Берём фото остальных
-				if (empty($p['images'])) continue;
-				$images[]= $p['images'][0];
-			}
-
-			if (empty($pos['images'])) $pos['images'] = [];
-			$pos['images'] = array_unique(array_merge($pos['images'], $images));
 		}
+		foreach ($pos['kit'] as $p) { //Берём фото остальных
+			if (empty($p['images'])) continue;
+			$images[]= $p['images'][0];
+		}
+
+		if (empty($pos['images'])) $pos['images'] = [];
+		$pos['images'] = array_unique(array_merge($pos['images'], $images));
 	}
 }
