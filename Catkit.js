@@ -5,6 +5,7 @@ export let Catkit = {
 		alert(1);
 	},
 	set: (go) => {
+		go += location.search;
 		history.pushState(null, null, go);
 		let event = new Event("popstate");
   		window.dispatchEvent(event);

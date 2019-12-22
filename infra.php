@@ -70,6 +70,7 @@ Event::handler('Showcase-position.onsearch', function (&$pos){
 	
 	//if ($cost) {
 	$pos['catkit'] = Catkit::implode($kit);
+	$pos['catkits'] = explode('&',$pos['catkit']);
 	$pos['Комплектация'] = Catkit::present($kit);
 	$pos['Цена'] = $cost;
 	$pos['kit'] = $kit;
@@ -129,7 +130,9 @@ Event::handler('Showcase-position.onshow', function (&$pos){
 	$pos['kitlist'] = array_reduce($data['list'], function ($carry, $p) {
 		if (empty($p['Группа в комплекте'])) $p['Группа в комплекте'] = '';		
 		if(empty($carry[$p['Группа в комплекте']])) $carry[$p['Группа в комплекте']] = [];
+		$p['kitid'] = $p['article_nick'].($p['item_nick']?(':'.$p['item_nick']):'');
 		$carry[$p['Группа в комплекте']][] = $p;
+
 		return $carry;
 	},[]);
 
