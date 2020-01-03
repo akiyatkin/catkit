@@ -6,12 +6,17 @@ use akiyatkin\showcase\Prices;
 use infrajs\cart\Cart;
 use akiyatkin\catkit\Catkit;
 
+
+Event::handler('Showcase.onconfig', function (&$opt) {
+	$opt['columns'] = array_merge($opt['columns'], ["compatibilities","Совместимость","Группа в комплекте"]);
+});
+
 //showcase.php
 	Event::handler('Showcase-catalog.onload', function ($obj) {
-		$pos = &$obj['pos'];
-		if (empty($pos['more']['Комплект'])) return; //Комплект к которому относится позиция
-		$r = Catkit::explode($pos['more']['Комплект']);
-		$pos['more']['kits'] = Catkit::implode($r,',');//kits комплекты в правильной записи
+		$pos = &$obj['pos']; //pos после Xlsx::make()
+		if (empty($pos['more']['Совместимость'])) return; //Комплект к которому относится позиция
+		$kit = Catkit::explode($pos['more']['Совместимость'], $pos['producer']);
+		$pos['more']['compatibilities'] = Catkit::implode($kit,',');//compatibilities комплекты в правильной записи
 	});
 
 	Event::handler('Showcase-priceonload', function () {
@@ -44,33 +49,28 @@ Event::handler('Showcase-position.onsearch', function (&$pos){
 	$emptycat = [];
 	$emptycost = [];
 	$find = [];
-	$r = Catkit::explode($catkit);
+	$kit = Catkit::explode($catkit, $pos['producer_nick']);
 	$cost = 0;
-	$kit = [];
-	foreach ($r as $res) {
-		$article_nick = $res['article_nick'];
-		$item_nick = $res['item_nick'];
-		$producer_nick = $pos['producer_nick'];
-		$p = Showcase::getModel($producer_nick, $article_nick, $item_nick);
-		if (!$p) {
-			$emptycat[] = $res['present'];
-			continue;
-		} else if (empty($p['Цена'])) {
-			$emptycost[] = $res['present'];
-			$p['Цена'] = false;
-			//continue;
-		}
-		$find[] = $res['present'];
-		$kit[] = $p;
 
-		
+	Catkit::run($kit, function($p, $group, $i) use (&$cost, &$kit, &$emptycat, &$emptycost, &$find) {
+		if (empty($p['article_nick'])) {
+			$emptycat[] = $p['present'];
+			
+			unset($kit[$group][$i]);
+			if (empty($kit[$group])) unset($kit[$group]);
+			return;
+		}
+		if (empty($p['Цена'])) {
+			$emptycost[] = $p['present'];
+			$p['Цена'] = false;
+		}
+		$find[] = $p['present'];
 		$cost += $p['Цена'];
-		
-	}
+	});
 	
-	//if ($cost) {
 	$pos['catkit'] = Catkit::implode($kit);
-	$pos['catkits'] = explode('&',$pos['catkit']);
+
+	$pos['catkits'] = explode('&', $pos['catkit']);
 	$pos['Комплектация'] = Catkit::present($kit);
 	$pos['Цена'] = $cost;
 	$pos['kit'] = $kit;
@@ -108,21 +108,17 @@ Event::handler('Showcase-position.onsearch', function (&$pos){
 });
 
 Event::handler('Showcase-position.onshow', function (&$pos){
-	if (empty($pos['kits'])) return;
+	if (empty($pos['compatibilities'])) return;
 	//Наполняем комплекты, к которым подходит текущая позиция
-	$kits = Catkit::explode($pos['kits']);
-	$pos['kits'] = array_map( function ($row) use ($pos) {
-		$producer_nick = $pos['producer_nick'];
-		$article_nick = $row['article_nick'];
-		$item_nick = $row['item_nick'];
-		return Showcase::getModel($producer_nick, $article_nick, $item_nick);
-	}, $kits);
+	$pos['compatibilities'] = Catkit::explode($pos['compatibilities'], $pos['producer_nick']);
 });
 Event::handler('Showcase-position.onshow', function (&$pos){	
 	//Проверяем у кого есть комплектующие
-	$kit = Catkit::implode([$pos]);
+
+	$kit = Catkit::implode(['sadf'=>[$pos]]);
+	
 	$mark = Showcase::getDefaultMark();
-	$mark->setVal(':more.kits.'.$kit.'=1:count=50');
+	$mark->setVal(':more.compatibilities.'.$kit.'=1:count=50');
 	$md = $mark->getData();
 	$data = Showcase::search($md);
 	if (empty($data['list'])) return;
@@ -166,11 +162,11 @@ function setKitPhoto(&$pos) {
 				}
 			}
 		}
-		foreach ($pos['kit'] as $p) { //Берём фото остальных
-			if (empty($p['images'])) continue;
-			$images[]= $p['images'][0];
-		}
-
+		Catkit::run($pos['kit'], function ($p) use (&$images) {
+			if (empty($p['images'])) return; 
+			$images[]= $p['images'][0];//Берём фото остальных
+		});
+		
 		if (empty($pos['images'])) $pos['images'] = [];
 		$pos['images'] = array_unique(array_merge($pos['images'], $images));
 	}
