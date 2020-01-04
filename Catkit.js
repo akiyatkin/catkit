@@ -16,7 +16,8 @@ export let Catkit = {
 		let kit = dataset.article_nick + (item_nick ? (':' + item_nick) : '');
 
 		let now = dataset.now.split('&');
-		let master_item = now.shift();
+		let master_item = dataset.master_item;
+
 		now.push(kit);//Добавили
 
 		
@@ -30,8 +31,9 @@ export let Catkit = {
 		let kit = dataset.article_nick + (item_nick ? (':' + item_nick) : '');
 
 		let now = dataset.now.split('&');
-		let master_item = now.shift();
-		now=[kit];//Заменили
+		let master_item = dataset.master_item;
+
+		now = [kit];//Заменили
 
 		
 		let go = '/' + dataset.base + '/' + master_item + (now.length ? ('&' + now.join("&")) : '');
@@ -44,7 +46,7 @@ export let Catkit = {
 		let kit = dataset.article_nick + (item_nick ? (':' + item_nick) : '');
 
 		let now = dataset.now.split('&');
-		let master_item = now.shift();
+		let master_item = dataset.master_item;
 
 		let index = now.lastIndexOf(kit);
 		if (index !== -1) now.splice(index, 1); //Удалили
@@ -52,6 +54,23 @@ export let Catkit = {
 		let go = '/' + dataset.base + '/' + master_item + (now.length ? ('&' + now.join("&")) : '');
 		Catkit.set(go);
 		
+	},
+	hand: (div) => {
+		div.querySelectorAll('.catkit.add').forEach(a => {
+			a.addEventListener('click', (e) => {
+				Catkit.add(a.dataset);
+			});
+		});
+		div.querySelectorAll('.catkit.rep').forEach(a => {
+			a.addEventListener('click', (e) => {
+				Catkit.rep(a.dataset);
+			});
+		});
+		div.querySelectorAll('.catkit.del').forEach(a => {
+			a.addEventListener('click', (e) => {
+				Catkit.del(a.dataset);
+			});
+		});
 	}
 
 }
