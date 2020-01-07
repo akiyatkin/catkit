@@ -1,0 +1,12 @@
+{
+	"tpl":"-catkit/samples/layout.tpl",
+	"jsontpl":"-showcase/api/search?showlist=true&m=:count=1000:sort=source{~encode(Crumb.get.m)}",
+	"tplroot":"LIST",
+	"child":{
+		"tplroot":"ITEM",
+		"tpl":"-catkit/samples/layout.tpl",
+		"global":"cart",
+		"jsontpl":"-showcase/api/pos/{crumb.name}/{crumb.child.name}/{crumb.child.child.name}"
+	}
+	
+}
