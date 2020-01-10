@@ -1,0 +1,15 @@
+.btn.catkit-ico {
+	font-size:12px; 
+	padding: 0;
+	width:20px;
+	height:20px;
+	display: inline-block;
+	cursor: pointer;
+	position: relative;
+	margin-bottom:5px;
+}
+
+.btn.catkit-ico.disabled,
+.btn.catkit-ico.active {
+	cursor: default;
+}
