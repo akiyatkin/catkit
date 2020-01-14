@@ -18,7 +18,10 @@
 			</td>
 		</tr>
 	{kitprops:}
-		<div class="mb-1">{Наименование}<br><a href="/catalog/{producer_nick}/{article_nick}{item:slpr}">{article}{item:pr}</a> <div class="float-right ml-1">{~cost(Цена)}{:orig.extend.unit}</div></div>
+		{::kitp}
+		{kitp:}
+		<div class="mb-1">{Наименование}<br><a href="/catalog/{producer_nick}/{article_nick}{item:slpr}">{article}{item:pr}</a> <div class="float-right ml-1">{Цена?:orig.extend.itemcost}</div></div>
+		
 	{pospath:}{producer_nick}/{article_nick}{item_nick?:itnick}
 	{itnick:}/{item_nick}
 {pritem:}
@@ -27,7 +30,7 @@
 	</p>
 {pr:} {.}
 {addkit:} ({kit::prkit})
-{prkit:}{article}{~last()??:comma}
+{prkit:}{::prkitnow}{prkitnow:}{article}{~last()??:comma}
 {comma:}, 
 {slpr:}/{.}
 {ORDER:}{:orig.ORDER}

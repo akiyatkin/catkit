@@ -37,7 +37,6 @@ Event::handler('Showcase.onconfig', function (&$opt) {
 	});
 
 Event::handler('Showcase-position.onsearch', function (&$pos){
-
 	if (!empty($pos['catkit'])) {
 		$catkit = $pos['catkit'];
 		$pos['iscatkit'] = true; //Если новый catkit ec
@@ -45,6 +44,8 @@ Event::handler('Showcase-position.onsearch', function (&$pos){
 		if (empty($pos['Комплектация'])) return false;
 		$catkit = $pos['Комплектация'];
 	}
+	
+	
 	
 	$emptycat = [];
 	$emptycost = [];
@@ -77,11 +78,13 @@ Event::handler('Showcase-position.onsearch', function (&$pos){
 
 	if ($emptycat) {
 		$pos['more']['Нет информации по комплектующим'] = implode(', ', array_unique($emptycat));
+		unset($pos['Цена']);
 	} else {
 		unset($pos['more']['Нет информации по комплектующим']);
 	}
 	if ($emptycost) {
 		$pos['more']['Нет цены по комплектующим'] = implode(', ', array_unique($emptycost));
+		unset($pos['Цена']);
 	} else {
 		unset($pos['more']['Нет цены по комплектующим']);
 	}
