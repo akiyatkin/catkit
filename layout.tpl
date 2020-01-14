@@ -18,15 +18,15 @@
 			<b>{pos.article}</b>
 		</div>-->
 		<hr>
-		{~length(pos.kit)?:showkits}
-		<div class="d-flex justify-content-between"><div>Рекомендуемая цена:&nbsp;</div><div>{pos:extend.itemcost}</div></div>
-		<div class="between mt-2">
-			{pos:extend.basketrow}
-		</div>
+		{~length(pos.kit)?:showkits?:showpos}
+		<div class="between mt-2">{pos:extend.basketrow}</div>
 	</div>
+	{showpos:}
+		<div class="d-flex justify-content-between align-items-end"><div>Официальная цена производителя:&nbsp;</div><div>{pos:extend.itemcost}</div></div>
 	{showkits:}
 		{pos.kit::groups}
 		<hr>
+		<div class="d-flex justify-content-between align-items-end"><div>Официальная цена комплекта:&nbsp;</div><div><b>{pos:extend.itemcost}</b></div></div>
 {groups:}
 	{::showkit}
 {showkit:}
