@@ -1,61 +1,51 @@
 import Fire from '/vendor/akiyatkin/load/Fire.js';
-export {Fire};
+import Seq from '/vendor/infrajs/Sequence/Seq.js';
+import Load from '/vendor/akiyatkin/load/Load.js';
+export {Fire, Seq, Load};
 export let Catkit = {
 	row: () => {
 		alert(1);
 	},
-	set: (base, master_item, now) => {
-
-		let go = '/' + base;
-		//go += (master_item || now.length) ? '/' + (master_item||1) : '';
-		go += '/' + (master_item||1);
-		go += (now.length ? ('/' + now.join("&")) : '');
-
-		go += location.search;
+	set: (now) => {
+		let base = Controller.names.catalog.crumb.child.child;
+		let go = '/' + (base.child ? base.child : base + '/1');
+		go += (now.length ? ('/' + now.join("&")) : '') + location.search;
+		
 		history.pushState(null, null, go);
 		let event = new Event("popstate");
   		window.dispatchEvent(event);
 	},
-	add: (dataset) => {
-		//Работает только на странице вида .../producer_nick/article_nick/item_nick&kit&kit?get
-		let item_nick = dataset.item_nick;
-		let kit = dataset.article_nick + (item_nick ? (':' + item_nick) : '');
-		let master_item = dataset.master_item;
-		let layer = Controller.names.catalog;
-		let now = layer.crumb.child.child.child.child.name;
-		now = now.split('&');
-
-		now.push(kit);//Добавили
-		
-		Catkit.set(dataset.base, master_item, now);
-		
+	add: async (dataset) => {
+		let now = await Catkit.now(dataset);
+		now.unshift(Catkit.kit(dataset));//Добавили
+		Catkit.set(now);
 	},
-	rep: (dataset) => {
-		//Работает только на странице вида .../producer_nick/article_nick/item_nick&kit&kit?get
+	rep: async (dataset) => {
+		let now = await Catkit.now(dataset);
+		now = [Catkit.kit(dataset)];//Заменили
+		Catkit.set(now);
+	},
+	kit: (dataset) => {
 		let item_nick = dataset.item_nick;
 		let kit = dataset.article_nick + (item_nick ? (':' + item_nick) : '');
-		let master_item = dataset.master_item;
-		let layer = Controller.names.catalog;
-		let now = layer.crumb.child.child.child.child.name;
-		now = now.split('&');
-
-		now = [kit];//Заменили
-		
-		Catkit.set(dataset.base, master_item, now);
-		
+		return kit;
 	},
 	del: (dataset) => {
 		//Работает только на странице вида .../producer_nick/article_nick/item_nick&kit&kit?get
-		let item_nick = dataset.item_nick;
-		let kit = dataset.article_nick + (item_nick ? (':' + item_nick) : '');
-		let master_item = dataset.master_item;
-		let layer = Controller.names.catalog;
-		let now = layer.crumb.child.child.child.child.name;
-
-		now = now.split('&');
-		let index = now.lastIndexOf(kit);
-		if (index !== -1) now.splice(index, 1); //Удалили
-		Catkit.set(dataset.base, master_item, now);		
+		Catkit.now(dataset).then((now) => {
+			let index = now.lastIndexOf(Catkit.kit(dataset));
+			if (index !== -1) now.splice(index, 1); //Удалили
+			Catkit.set(now);
+		});
+	},
+	now: async (dataset) => {
+		let now = Seq.get(Controller.names.catalog.crumb, 'child.child.child.child.name','');
+		if (!now) {
+			let data = await Load.on('fetch', Controller.names.catkit.json);
+			now = Seq.get(data,'pos.catkit','');
+		}
+		now = now.split('&').filter(Boolean);
+		return now;
 	},
 	hand: (div) => {
 		div.querySelectorAll('.catkit.add').forEach(a => {

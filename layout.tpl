@@ -40,11 +40,9 @@
 					class="{....iscatkit??:disabled} btn btn-sm btn-outline-warning catkit-ico catkit del ml-2"
 					data-crumb="false" 
 					onclick="return false"
-					data-base="{crumb.child.child}"
-					data-layerid="{id}"
-					data-master_item="{data.pos.item_nick}"
 					data-article_nick="{article_nick}" 
 					data-item_nick="{item_nick}"
+
 				><i class="fas fa-times"></i></span>
 			</div>
 		</div>
