@@ -1,13 +1,19 @@
 {extend::}-catalog/extend.tpl
 {PRESENT:}
 	{data:show}
-	<script type="module">
+	<script async type="module">
 		(async () => {
 			let Load = (await import('/vendor/akiyatkin/load/Load.js')).default;
 			let Catkit = await Load.on('import default', '/vendor/akiyatkin/catkit/Catkit.js');
-			let layer = Controller.ids[{id}]; //Слоя может не быть в точке входа
-			if (layer && layer.counter != {counter}) return; 
+			
+			let iscontext = () => {
+				if (!window.Controller) return true;
+				let layer = Controller.ids[{id}];
+				if (!layer) return true;
+				return layer.counter == {counter};
+			}
 
+			if (!iscontext()) return;
 			let div = document.getElementById('{div}');	
 			Catkit.hand(div);
 		})();
@@ -17,15 +23,22 @@
 		<!--<div class="mt-2">Комплектация<br>
 			<b>{pos.article}</b>
 		</div>-->
-		<hr>
-		{~length(pos.kit)?:showkits?:showpos}
+
+		<div class="biginfo">
+			<hr>
+			{~length(pos.kit)?:showkits}
+		</div>
+		{~length(pos.kit)?:showkitcost?:showposcost}
 		<div class="between mt-2">{pos:extend.basketrow}</div>
 	</div>
-	{showpos:}
+	{showposcost:}
 		<div class="d-flex justify-content-between align-items-end"><div>Официальная цена производителя:&nbsp;</div><div>{pos:extend.itemcost}</div></div>
 	{showkits:}
-		{pos.kit::groups}
+		<div style="overflow-y: auto">
+			{pos.kit::groups}
+		</div>
 		<hr>
+	{showkitcost:}
 		<div class="d-flex justify-content-between align-items-end"><div>Официальная цена комплекта:&nbsp;</div><div><b>{pos:extend.itemcost}</b></div></div>
 {groups:}
 	{::showkit}
@@ -40,6 +53,7 @@
 					class="{....iscatkit??:disabled} btn btn-sm btn-outline-warning catkit-ico catkit del ml-2"
 					data-crumb="false" 
 					onclick="return false"
+
 					data-article_nick="{article_nick}" 
 					data-item_nick="{item_nick}"
 
