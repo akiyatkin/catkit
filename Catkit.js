@@ -38,14 +38,21 @@ export let Catkit = {
 			Catkit.set(now);
 		});
 	},
-	now: async (dataset) => {
-		let now = Seq.get(Controller.names.catalog.crumb, 'child.child.child.child.name','');
-		if (!now) {
-			let data = await Load.on('fetch', Controller.names.catkit.json);
-			now = Seq.get(data,'pos.catkit','');
-		}
-		now = now.split('&').filter(Boolean);
-		return now;
+	now: (dataset) => {
+		let prom = new Promise((resolve, reject) => {
+			domready(() => {
+				Event.one('Controller.onshow', async function (){
+					let now = Seq.get(Controller.names.catalog.crumb, 'child.child.child.child.name','');
+					if (!now) {
+						let data = await Load.on('fetch', Controller.names.catkit.json);
+						now = Seq.get(data,'pos.catkit','');
+					}
+					now = now.split('&').filter(Boolean);
+					resolve(now);
+				});
+			})	
+		});
+		return prom;
 	},
 	hand: (div) => {
 		div.querySelectorAll('.catkit.add').forEach(a => {

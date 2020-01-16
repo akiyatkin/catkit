@@ -1,7 +1,7 @@
 {
 	"tpl":"-catkit/layout.tpl",
 	"divcheck":true,
-	"tplroot":"PRESENT",
+	"tplroot":"CATKITPRESENT",
 	"name":"catkit",
 	"jsontpl":"-showcase/api/pos/{crumb.child.name}/{crumb.child.child.name}/{crumb.child.child.child?:next?:1}{next:}{crumb.child.child.child.name}/{crumb.child.child.child.child.name}"
 }

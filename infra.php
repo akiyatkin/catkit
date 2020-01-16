@@ -53,7 +53,8 @@ Event::handler('Showcase-position.onsearch', function (&$pos){
 	$kit = Catkit::explode($catkit, $pos['producer_nick']);
 	$cost = 0;
 
-	Catkit::run($kit, function($p, $group, $i) use (&$cost, &$kit, &$emptycat, &$emptycost, &$find) {
+	$count = 0;
+	Catkit::run($kit, function($p, $group, $i) use (&$count, &$cost, &$kit, &$emptycat, &$emptycost, &$find) {
 		if (empty($p['article_nick'])) {
 			$emptycat[] = $p['present'];
 			
@@ -61,6 +62,7 @@ Event::handler('Showcase-position.onsearch', function (&$pos){
 			if (empty($kit[$group])) unset($kit[$group]);
 			return;
 		}
+		$count++;
 		if (empty($p['Цена'])) {
 			$emptycost[] = $p['present'];
 			$p['Цена'] = false;
@@ -75,6 +77,7 @@ Event::handler('Showcase-position.onsearch', function (&$pos){
 	$pos['Комплектация'] = Catkit::present($kit);
 	$pos['Цена'] = $cost;
 	$pos['kit'] = $kit;
+	$pos['kitcount'] = $count;
 
 	if ($emptycat) {
 		$pos['more']['Нет информации по комплектующим'] = implode(', ', array_unique($emptycat));
