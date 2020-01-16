@@ -1,5 +1,5 @@
 import Fire from '/vendor/akiyatkin/load/Fire.js';
-import Seq from '/vendor/infrajs/Sequence/Seq.js';
+import Seq from '/vendor/infrajs/sequence/Seq.js';
 import Load from '/vendor/akiyatkin/load/Load.js';
 export {Fire, Seq, Load};
 export let Catkit = {
