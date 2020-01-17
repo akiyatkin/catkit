@@ -14,7 +14,7 @@ class Catkit {
 		foreach ($kit as $p) {
 			if (!empty($p['article_nick'])) {
 				$c = $p['article_nick'];
-				if ($p['item_nick']) $c .= ':'.$p['item_nick'];
+				if ($p['item_num'] != 1) $c .= ':'.$p['item_num'];
 			} else {
 				$c = $p['present'];
 			}
@@ -37,9 +37,9 @@ class Catkit {
 		$catkit = array_map( function ($catkit) use ($producer_nick) {
 			$r = explode(':', $catkit);
 			$article_nick = Path::encode($r[0]);
-			if (!empty($r[1])) $item_nick = Path::encode($r[1]);
-			else $item_nick = '';
-			$p = Showcase::getModel($producer_nick, $article_nick, $item_nick);
+			if (!empty($r[1])) $item_num = Path::encode($r[1]);
+			else $item_num = 1;
+			$p = Showcase::getModel($producer_nick, $article_nick, $item_num);
 			if (!$p) $p = [];
 			$p['present'] = trim($catkit);
 			return $p;

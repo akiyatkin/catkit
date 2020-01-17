@@ -16,43 +16,70 @@ export let Catkit = {
   		window.dispatchEvent(event);
 	},
 	add: async (dataset) => {
-		let now = await Catkit.now(dataset);
+		let now = await Catkit.now();
 		now.unshift(Catkit.kit(dataset));//Добавили
 		Catkit.set(now);
 	},
+	run: (kitlist, callback) => {
+		for (let g in kitlist) {
+			for (let i = 0, l = kitlist[g].length; i < l; i++){
+				let pos = kitlist[g][i];
+				let r = callback(pos, g);
+				if (r != null) return r;
+			};
+		}
+	},
+	group: async (dataset) => {
+		let data = await Catkit.data();
+		let origkit = Catkit.kit(dataset);
+		//ищем группу с нашим китом	
+		return Catkit.run(data.pos.kitlist, (pos, group) => {
+			let kit = Catkit.kit(pos);
+			if (kit == origkit) return group;
+		});
+	},
 	rep: async (dataset) => {
-		let now = await Catkit.now(dataset);
-		now = [Catkit.kit(dataset)];//Заменили
+		let now = await Catkit.now();
+		let group = await Catkit.group(dataset);
+		let data = await Catkit.data();
+		for (let i = 0, l = data.pos.kitlist[group].length; i < l; i++) {
+			let kit = Catkit.kit(data.pos.kitlist[group][i]);
+			do var index = now.indexOf(kit);
+			while (~index && now.splice(index,1));
+		}
+		now.unshift(Catkit.kit(dataset));//Добавили
 		Catkit.set(now);
 	},
-	kit: (dataset) => {
-		let item_nick = dataset.item_nick;
-		let kit = dataset.article_nick + (item_nick ? (':' + item_nick) : '');
+	kit: (pos) => {
+		let item_num = pos.item_num;
+		let kit = pos.article_nick + (item_num != 1 ? (':' + item_num) : '');
 		return kit;
 	},
 	del: (dataset) => {
-		//Работает только на странице вида .../producer_nick/article_nick/item_nick&kit&kit?get
-		Catkit.now(dataset).then((now) => {
+		//Работает только на странице вида .../producer_nick/article_nick/item_num/kit&kit?get
+		Catkit.now().then((now) => {
 			let index = now.lastIndexOf(Catkit.kit(dataset));
 			if (index !== -1) now.splice(index, 1); //Удалили
 			Catkit.set(now);
 		});
 	},
-	now: (dataset) => {
-		let prom = new Promise((resolve, reject) => {
-			domready(() => {
-				Event.one('Controller.onshow', async function (){
-					let now = Seq.get(Controller.names.catalog.crumb, 'child.child.child.child.name','');
-					if (!now) {
-						let data = await Load.on('fetch', Controller.names.catkit.json);
-						now = Seq.get(data,'pos.catkit','');
-					}
-					now = now.split('&').filter(Boolean);
-					resolve(now);
-				});
-			})	
-		});
-		return prom;
+	wait: () => {
+		if (Catkit.wait.promise) return Catkit.wait.promise;
+		return Catkit.wait.promise = new Promise((resolve, reject) => 
+			domready(() => Event.one('Controller.onshow', resolve)));
+	},
+	data: async () => {
+		await Catkit.wait();
+		return Load.on('fetch', Controller.names.catkit.json);
+	},
+	now: async () => {
+		await Catkit.wait();
+		let now = Seq.get(Controller.names.catalog.crumb, 'child.child.child.child.name','');
+		if (!now) {
+			let data = await Catkit.data();
+			now = Seq.get(data,'pos.catkit','');
+		}
+		return now.split('&').filter(Boolean);
 	},
 	hand: (div) => {
 		div.querySelectorAll('.catkit.add').forEach(a => {
@@ -73,5 +100,6 @@ export let Catkit = {
 	}
 
 }
-
+//debug
+window.Catkit = Catkit;
 export default Catkit;

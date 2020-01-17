@@ -17,13 +17,11 @@
 				{kit::kitprops}
 			</td>
 		</tr>
+	{cat::}-catalog/cat.tpl
 	{kitprops:}
 		{::kitp}
 		{kitp:}
-		<div class="mb-1">{Наименование}<br><a href="/catalog/{producer_nick}/{article_nick}{item:slpr}">{article}{item:pr}</a> <div class="float-right ml-1">{Цена?:orig.extend.itemcost}</div></div>
-		
-	{pospath:}{producer_nick}/{article_nick}{item_nick?:itnick}
-	{itnick:}/{item_nick}
+		<div class="mb-1">{Наименование}<br><a href="/{:cat.pospath}">{article}{item:pr}</a> <div class="float-right ml-1">{Цена?:orig.extend.itemcost}</div></div>
 {pritem:}
 	<p>
 		{Наименование} {producer} {article}{item:pr}{kit?:addkit}<br><b>{count}</b> по <b>{~cost(cost)}&nbsp;руб.</b> = <b>{~cost(sum)}&nbsp;руб.</b>
