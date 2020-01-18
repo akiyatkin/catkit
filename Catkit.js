@@ -42,16 +42,24 @@ export let Catkit = {
 		let now = await Catkit.now();
 		let group = await Catkit.group(dataset);
 		let data = await Catkit.data();
+		
 		for (let i = 0, l = data.pos.kitlist[group].length; i < l; i++) {
-			let kit = Catkit.kit(data.pos.kitlist[group][i]);
-			do var index = now.indexOf(kit);
-			while (~index && now.splice(index,1));
+			let pos = data.pos.kitlist[group][i]
+			let items = pos.items;
+			if (!items) items = {'':pos};
+			for (let j in items) {
+				let ikit = Catkit.kit(pos,items[j]['item_num']);
+				console.log(ikit);
+				do var index = now.indexOf(ikit);
+				while (~index && now.splice(index,1));
+			}
+			
 		}
 		now.unshift(Catkit.kit(dataset));//Добавили
 		Catkit.set(now);
 	},
-	kit: (pos) => {
-		let item_num = pos.item_num;
+	kit: (pos, item_num = pos.item_num) => {
+		//item_num = item_num || pos.item_num;
 		let kit = pos.article_nick + (item_num != 1 ? (':' + item_num) : '');
 		return kit;
 	},

@@ -155,17 +155,27 @@
 			Catkit.hand(div);
 		})();
 	</script>
+	{kitopen:}Показать комплектацию
+	{posopen:}Навигация по описанию
 	{show:}
 	<div>
+		<div class="mb-1 d-flex flex-column flex-md-row justify-content-between">
+			
+			<div class="order-2 order-md-1"><b>{pos.Наименование} {pos.article} {pos.item}</b></div>
+			<div class="mb-1 mb-md-0 order-1 order-md-2 text-right">
+				<nobr class="a openinfo" style="color:red">
+					{~length(pos.kit)?:kitopen?:posopen}
+				</nobr>
+			</div>
+		</div>
 		<div class="biginfo">
-			<hr>
+
 			{~length(pos.kit)?:showkits}
 		</div>
 		{~length(pos.kit)?:showkitcost?:showposcost}
 		<div class="between mt-2">{pos:extend.basketrow}</div>
 	</div>
 	{showposcost:}
-		<span class="a openinfo" style="color:red">Меню модели</span>
 		<div class="d-flex justify-content-between align-items-end"><div>Официальная цена:&nbsp;</div><div>{pos:extend.itemcost}</div></div>
 	{showkits:}
 		<div style="overflow-y: auto">
@@ -174,9 +184,9 @@
 	{showkitcost:}
 		
 		<div class="d-flex justify-content-between align-items-end">
-			<div><b class="openinfo">{pos.article} {item}</b></div>
+			<!--<div><b class="openinfo">{pos.article} {pos.item}</b></div>-->
 			<div>
-				<span class="a openinfo" style="color:red">Показать комплектацию</span>
+				<!--<span class="a openinfo" style="color:red">Показать комплектацию</span>-->
 				<!--<span class="a closeinfo" style="color:red">Свернуть</span>-->
 			</div>
 		</div>
@@ -361,9 +371,8 @@
 			}
 		</style>
 		<div class="stick-el stick">
-			<div class="biginfo">
+			<div class="biginfo mb-3">
 				<span style="color:red" class="closeinfo a float-right">Свернуть</span>
-				<b>{article} {item}</b><br>
 				<span class="a" onclick="Ascroll.go('.cat-position')">Общая информация</span><br>
 				{~length(compatibilities)?:linkkits}
 				{~length(texts)?:linktexts}
