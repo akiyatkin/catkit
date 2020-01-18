@@ -49,7 +49,6 @@ export let Catkit = {
 			if (!items) items = {'':pos};
 			for (let j in items) {
 				let ikit = Catkit.kit(pos,items[j]['item_num']);
-				console.log(ikit);
 				do var index = now.indexOf(ikit);
 				while (~index && now.splice(index,1));
 			}

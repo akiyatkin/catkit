@@ -75,10 +75,11 @@ Event::handler('Showcase-position.onsearch', function (&$pos){
 
 	$pos['catkits'] = explode('&', $pos['catkit']);
 	$pos['Комплектация'] = Catkit::present($kit);
+
 	$pos['Цена'] = $cost;
 	$pos['kit'] = $kit;
 	$pos['kitcount'] = $count;
-
+	
 	if ($emptycat) {
 		$pos['more']['Нет информации по комплектующим'] = implode(', ', array_unique($emptycat));
 		unset($pos['Цена']);
@@ -120,7 +121,7 @@ Event::handler('Showcase-position.onshow', function (&$pos){
 });
 Event::handler('Showcase-position.onshow', function (&$pos){	
 	//Проверяем у кого есть комплектующие
-
+	
 	$kit = Catkit::implode(['sadf'=>[$pos]]);
 	
 	$mark = Showcase::getDefaultMark();
@@ -132,13 +133,11 @@ Event::handler('Showcase-position.onshow', function (&$pos){
 	$pos['kitlist'] = array_reduce($data['list'], function ($carry, $p) {
 		if (empty($p['Группа в комплекте'])) $p['Группа в комплекте'] = '';		
 		if(empty($carry[$p['Группа в комплекте']])) $carry[$p['Группа в комплекте']] = [];
-		$p['kitid'] = $p['article_nick'].($p['item_nick']?(':'.$p['item_nick']):'');
+		$p['kitid'] = $p['article_nick'].($p['item_nick']?(':'.$p['item_num']):'');
 		$carry[$p['Группа в комплекте']][] = $p;
 
 		return $carry;
 	},[]);
-
-	
 	if (empty($pos['kitlist'])) unset($pos['kitlist']);
 	setKitPhoto($pos);
 });

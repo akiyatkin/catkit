@@ -44,6 +44,7 @@ class Catkit {
 			$p['present'] = trim($catkit);
 			return $p;
 		}, $r);
+
 		$kit = [];
 
 		foreach ($catkit as $res) {
@@ -51,6 +52,7 @@ class Catkit {
 			if (empty($kit[$group])) $kit[$group] = [];
 			$kit[$group][] = $res;
 		}
+		
 		return $kit;
 	}
 	public static function present($kit) {
