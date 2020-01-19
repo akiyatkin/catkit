@@ -55,7 +55,7 @@
 					display:inline-block;
 				}
 				#{div} .openinfo.show {
-					visibility: hidden;
+					display:none;
 				}
 				
 				
@@ -162,8 +162,8 @@
 		<div class="mb-1 d-flex flex-column flex-md-row justify-content-between">
 			
 			<div class="order-2 order-md-1"><b>{pos.Наименование} {pos.article} {pos.item}</b></div>
-			<div class="mb-1 mb-md-0 order-1 order-md-2 text-right">
-				<nobr class="a openinfo" style="color:red">
+			<div class="order-1 order-md-2 text-right">
+				<nobr class="mb-1 mb-md-0 a openinfo" style="color:red">
 					{~length(pos.kit)?:kitopen?:posopen}
 				</nobr>
 			</div>
@@ -202,7 +202,7 @@
 	<div class="clearfix mb-2">
 		<div class="d-flex justify-content-between">
 			<div style="white-space:nowrap; display:block; overflow:hidden; text-overflow: ellipsis;">
-				<a onclick="Ascroll.go('#kitlist'); return false;" data-crumb="false" href="/{Controller.names.catalog.crumb}/{producer_nick}/{article_nick}{item_num!:odin?item_num:cat.slval}">{Наименование}</a>
+				<a onclick="//Ascroll.go('#kitlist'); return false;" data-crumb2="false" href="/{Controller.names.catalog.crumb}/{producer_nick}/{article_nick}{item_num!:odin?item_num:cat.slval}">{Наименование}</a>
 			</div>
 			<div>
 				<span {....iscatkit??:deftitle} 
@@ -259,7 +259,33 @@
 					<a href="/{:cat.pospathadd}{data.pos:cat.kit}{:cat.mark.set}"><b>{article}</b></a>
 				</div>
 			</div>
-		{prkit:}
+
+{KITLIST:}
+	{~length(kitlist)?:showKITLIST}
+	{showKITLIST:}
+	<h2 id="kitlist">Компоненты</h2>
+	{kitlist::kitlistgroup}
+	<script async type="module">
+		(async () => {
+			let iscontext = () => {
+				if (!window.Controller) return true;
+				let layer = Controller.ids[{id}];
+				if (!layer) return true;
+				return layer.counter == {counter};
+			}
+
+			let Load = (await import('/vendor/akiyatkin/load/Load.js')).default;
+			let Catkit = await Load.on('import default', '/vendor/akiyatkin/catkit/Catkit.js');
+			
+			if (!iscontext()) return;
+			let div = document.getElementById('{div}');	
+			Catkit.hand(div);
+		})();
+	</script>
+	{kitlistgroup:}
+		<h3>{~key}</h3>
+		<div class="row">{::prkit}</div>
+		{prkit2:}
 			<div class="col-sm-4 d-flex align-items-center justify-content-center space" 
 				style="
 					background-image:url('/-imager/?w=528&src={images.0}'); 
@@ -295,32 +321,44 @@
 					<a href="/{:cat.pospath}{:cat.mark.set}"><b>{article}</b></a>
 				</div>
 			</div>
-		{dvpr:}:{.}
-{KITLIST:}
-	{~length(kitlist)?:showKITLIST}
-	{showKITLIST:}
-	<h2 id="kitlist">Компоненты</h2>
-	{kitlist::kitlistgroup}
-	<script async type="module">
-		(async () => {
-			let iscontext = () => {
-				if (!window.Controller) return true;
-				let layer = Controller.ids[{id}];
-				if (!layer) return true;
-				return layer.counter == {counter};
-			}
+		{prkit:}
+			<div class="col-sm-4 space" style="font-size:13px">
+				<center><img class="img-fluid" src="/-imager/?h=400&w=400&crop=1&src={images.0}"></center>
 
-			let Load = (await import('/vendor/akiyatkin/load/Load.js')).default;
-			let Catkit = await Load.on('import default', '/vendor/akiyatkin/catkit/Catkit.js');
-			
-			if (!iscontext()) return;
-			let div = document.getElementById('{div}');	
-			Catkit.hand(div);
-		})();
-	</script>
-	{kitlistgroup:}
-		<h3>{~key}</h3>
-		<div class="row">{::prkit}</div>
+				<div >
+					<div class="d-flex flex-column" style="min-width:0;">
+						<div style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{Наименование}&nbsp;</div>
+						<div style="flex-grow:1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+							<a href="/{:cat.pospath}{:cat.mark.set}">
+								<b>{article}</b>
+							</a>
+						</div>
+					</div>
+				</div>
+				<div class="">
+					{~length(items)?items::prkititems?:prkitone}
+					
+
+
+					
+				</div>
+			</div>
+			{prkititems:}
+				<div style="flex-grow:1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{item}</div>
+				<div class="text-right">{:extend.itemcost}
+					&nbsp;
+					<span class="{~inArray(kitid,data.pos.catkits)?:font-weight-bold} catkit add btn btn-sm btn-warning catkit-ico"
+					data-article_nick="{...article_nick}" 
+					data-item_num="{item_num}"><i class="fas fa-plus"></i></span>
+				</div>
+				
+			{prkitone:}
+				<div class="text-right">{:extend.itemcost}
+					&nbsp;
+					<span class="{~inArray(kitid,data.pos.catkits)?:font-weight-bold} catkit add btn btn-sm btn-warning catkit-ico"
+					data-article_nick="{article_nick}" 
+					data-item_num="{item_num}"><i class="fas fa-plus"></i></span>
+				</div>
 {POSCOLUMN:}
 	<div class="stick-cont">
 		<style>
@@ -428,7 +466,7 @@
 
 		});
 	</script>
-	{linkkitlist:}<span class="a" onclick="Ascroll.go('#kitlist')">Компоненты</span><br>
+	{linkkitlist:}<span class="a" onclick="Ascroll.go('#kitlist')"><b>Компоненты</b></span><br>
 	{linkkits:}<span class="a" onclick="Ascroll.go('#kits')">Совместимость</span><br>
 	{linktexts:}<span class="a" onclick="Ascroll.go('#texts')">Технические характеристики</span><br>
 	{linkfeatures:}<span class="a" onclick="Ascroll.go('#features')">Особенности</span><br>
