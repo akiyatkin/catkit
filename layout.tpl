@@ -141,7 +141,7 @@
 	<script async type="module">
 		(async () => {
 			let Load = (await import('/vendor/akiyatkin/load/Load.js')).default;
-			let Catkit = await Load.on('import default', '/vendor/akiyatkin/catkit/Catkit.js');
+			let Catkit = await Load.on('import-default', '/vendor/akiyatkin/catkit/Catkit.js');
 			
 			let iscontext = () => {
 				if (!window.Controller) return true;
@@ -275,7 +275,7 @@
 			}
 
 			let Load = (await import('/vendor/akiyatkin/load/Load.js')).default;
-			let Catkit = await Load.on('import default', '/vendor/akiyatkin/catkit/Catkit.js');
+			let Catkit = await Load.on('import-default', '/vendor/akiyatkin/catkit/Catkit.js');
 			
 			if (!iscontext()) return;
 			let div = document.getElementById('{div}');	

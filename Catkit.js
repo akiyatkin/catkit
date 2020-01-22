@@ -77,13 +77,14 @@ export let Catkit = {
 	},
 	data: async () => {
 		await Catkit.wait();
-		return Load.on('fetch', Controller.names.catkit.json);
+		return Load.on('fetch-json', Controller.names.catkit.json);
 	},
 	now: async () => {
 		await Catkit.wait();
 		let now = Seq.get(Controller.names.catalog.crumb, 'child.child.child.child.name','');
 		if (!now) {
 			let data = await Catkit.data();
+			console.log(data);
 			now = Seq.get(data,'pos.catkit','');
 		}
 		return now.split('&').filter(Boolean);
