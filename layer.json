@@ -3,5 +3,6 @@
 	"divcheck":true,
 	"tplroot":"CATKITPRESENT",
 	"name":"catkit",
+	"redirecttpl":"{data.pos?:red}{red:}/{crumb}/{data.pos.producer_nick}/{data.pos.article_nick}{(data.pos.item_num!:1|data.pos.iscatkit)?data.pos.item_num:s}{data.pos.iscatkit?data.pos.catkit:s}{s:}/{.}",
 	"jsontpl":"-showcase/api/pos/{crumb.child.name}/{crumb.child.child.name}/{crumb.child.child.child?:next?:1}{next:}{crumb.child.child.child.name}/{crumb.child.child.child.child.name}"
 }
