@@ -152,7 +152,7 @@
 	<div>
 		<div class="mb-1 d-flex flex-column flex-md-row justify-content-between">
 			
-			<div class="order-2 order-md-1"><b>{pos.Наименование} {pos.article} {pos.item}</b></div>
+			<div class="order-2 order-md-1"><b>{pos.Наименование} {pos.article} {pos.more.Код}</b></div>
 			<div class="order-1 order-md-2 text-right">
 				<nobr class="mb-1 mb-md-0 a openinfo" style="color:red">
 					{~length(pos.kit)?:kitopen?:posopen}
@@ -218,7 +218,7 @@
 					{article}
 				</div>
 				<div style="white-space:nowrap; overflow:hidden; text-overflow: ellipsis;">
-					{item}
+					{more.Код}
 				</div>
 			</div>
 			<div title="Рекомендуемая цена" class="text-right ml-2">{(Цена|...Цена)?:extend.itemcost}</div>
@@ -274,9 +274,11 @@
 		})();
 	</script>
 	{kitlistgroup:}	
-		{:kitlist-{(data.pos.catkitgroups[~key].tpl|~conf.catkit.tplgroups)}}
+		<div style="font-size:13px">
+			<h3>{~key}</h3>
+			{:kitlist-{(data.pos.catkitgroups[~key].tpl|~conf.catkit.tplgroups)}}
+		</div>
 	{kitlist-table:}
-		<h3>{~key}</h3>
 		<div>{::prkit-table}</div>
 		{prkit-table:}
 			<div class="d-flex mb-2">
@@ -284,7 +286,7 @@
 					<a href="/{:cat.pospath}{:cat.mark.set}"><img src="/-imager/?h=70&src={images.0}"></a>
 				</div>
 				<div class="flex-grow-1" style="min-width:0">
-					<div><a href="/{:cat.pospath}{:cat.mark.set}">{Наименование} {article}</a></div>
+					<div><a href="/{:cat.pospath}{:cat.mark.set}">{Наименование} <b>{article}</b></a></div>
 					<div class="d-flex">
 						<div class="flex-grow-1 mr-1" style="min-width:0">
 							{~length(items)?items::prkititems2item?:prkitone2item}
@@ -298,7 +300,9 @@
 
 		{prkititems2item:}
 			<div style="flex-grow:1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-				<a href="/{:cat.pospath}{:cat.mark.set}">{item}</a>
+				<a href="/{:cat.pospath}{:cat.mark.set}">
+					{more.Код}
+				</a>
 			</div>
 		{nocost:}
 			<div class="text-right">
@@ -322,15 +326,14 @@
 					data-item_num="{item_num}"><i class="fas fa-plus"></i></span>
 			</div>
 	{kitlist-blocks:}
-		<h3>{~key}</h3>
 		<div class="row">{::prkit}</div>
 		{prkit:}
-			<div class="col-sm-4 space" style="font-size:13px">
+			<div class="col-sm-4 space">
 				<center><img class="img-fluid" src="/-imager/?h=400&w=400&crop=1&src={images.0}"></center>
 
 				<div >
 					<div class="d-flex flex-column" style="min-width:0;">
-						<div style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{Наименование}&nbsp;</div>
+						<div title="{Наименование}" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{Наименование}&nbsp;</div>
 						<div style="flex-grow:1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
 							<a href="/{:cat.pospath}{:cat.mark.set}">
 								<b>{article}</b>
@@ -343,8 +346,10 @@
 				</div>
 			</div>
 			{prkititems:}
-				<div style="flex-grow:1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{item}</div>
-				{(Цена|...Цена)?:prkititemscost}
+				<div class="d-flex">
+					<div title="{more.Код}" class="mr-1" style="flex-grow:1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{more.Код}</div>
+					<div style="white-space: nowrap;">{(Цена|...Цена)?:prkititemscost}</div>
+				</div>
 				{prkititemscost:}
 				<div class="text-right">{:extend.itemcost}
 					&nbsp;
@@ -417,9 +422,10 @@
 				{~length(compatibilities)?:linkkits}
 				{~length(texts)?:linktexts}
 				{~length(features)?:linkfeatures}
-				{~length(kitlist)?:linkkitlist}
 				{~length(Видео с Youtube)?:linkyoutube}
 				{~length(files)?:linkfiles}
+				{~length(kitlist)?:linkkitlist}
+				
 			</div>
 			<div id="CATKITPRESENT"></div>
 		</div>
@@ -468,7 +474,7 @@
 
 		});
 	</script>
-	{linkkitlist:}<span class="a" onclick="Ascroll.go('#kitlist')">Выбрать компоненты</span><br>
+	{linkkitlist:}<hr><i class="far fa-edit"></i>&nbsp;<span class="a" onclick="Ascroll.go('#kitlist')">Выбрать компоненты</span><hr>
 	{linkkits:}<span class="a" onclick="Ascroll.go('#kits')">Совместимость</span><br>
 	{linktexts:}<span class="a" onclick="Ascroll.go('#texts')">Технические характеристики</span><br>
 	{linkfeatures:}<span class="a" onclick="Ascroll.go('#features')">Особенности</span><br>
