@@ -300,9 +300,9 @@
 
 		{prkititems2item:}
 			<div style="flex-grow:1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-				<a href="/{:cat.pospath}{:cat.mark.set}">
+				
 					{more.Код}
-				</a>
+				
 			</div>
 		{nocost:}
 			<div class="text-right">
