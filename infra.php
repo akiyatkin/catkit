@@ -122,7 +122,7 @@ Event::handler('Showcase-position.onshow', function (&$pos){
 Event::handler('Showcase-position.onshow', function (&$pos){	
 	//Проверяем у кого есть комплектующие
 	
-	$kit = Catkit::implode(['sadf'=>[$pos]]);
+	$kit = Catkit::implode(['sadf'=>[$pos]]); //Группа не участует в запросе (safd)
 	
 	$mark = Showcase::getDefaultMark();
 	$mark->setVal(':more.compatibilities.'.$kit.'=1:count=50');
@@ -139,6 +139,7 @@ Event::handler('Showcase-position.onshow', function (&$pos){
 		return $carry;
 	},[]);
 	if (empty($pos['kitlist'])) unset($pos['kitlist']);
+	else $pos['catkitgroups'] = Showcase::getOption(['catkitgroups']);
 	setKitPhoto($pos);
 });
 

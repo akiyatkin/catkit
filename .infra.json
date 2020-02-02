@@ -1,6 +1,8 @@
 {
 	"require":"infra.php",
 	"conf":"akiyatkin\\catkit\\Catkit",
+	"pub":["tplgroups"],
+	"tplgroups":"blocks",
 	"update":"update.php",
 	"css":"style.css",
 	"clutch":{

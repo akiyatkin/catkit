@@ -70,10 +70,6 @@
 			if (!layer) return true;
 			return layer.counter == {counter};
 		}
-		let div = document.getElementById('{div}');
-		
-		let col = document.getElementById('COLUMN');
-
 		let hide = () => {
 			col.classList.remove('show');
 			document.body.classList.remove('hiddenoverflow');
@@ -90,7 +86,6 @@
 			for (let i = 0; i < elements.length; i++) {
 				elements[i].classList.remove('show');
 			}
-
 		}
 		let show = () => {
 			col.classList.add('show');
@@ -109,12 +104,9 @@
 				elements[i].classList.add('show');
 			}
 		}
-		domready(() => {
-			Event.handler('Controller.onshow', () => {
-				if (!iscontext()) return;
-				if (col.classList.contains('show')) show();
-			});	
-		});
+		
+		let div = document.getElementById('{div}');
+		let col = document.getElementById('COLUMN');
 		
 		var elements = col.getElementsByTagName('a');
 		for (let i = 0; i < elements.length; i++) {
@@ -133,11 +125,10 @@
 				e.stopPropagation();
 			});
 		}
-
+		//На мобильном размере развернули, вернули размер пк, перешли в комплектующую, вернулись и уменили до мобильного размера. На мобильном будет криво расскрыто, потому что стили применились с классом show у колонки, который никуда не делся, а внутренние блоки остались в стостянни свёрнутости, так как слой с комплектующими внутри показался снова. Надо или сохранять развёрнутость или сбрасывать раскрытие. В данном случае сохраняем развёрнутость.
+		if (col.classList.contains('show')) show();
 	</script>
-	<script async type="module">
-		
-	</script>
+	
 	<script async type="module">
 		(async () => {
 			let Load = (await import('/vendor/akiyatkin/load/Load.js')).default;
@@ -230,7 +221,7 @@
 					{item}
 				</div>
 			</div>
-			<div title="Рекомендуемая цена" class="text-right ml-2">{Цена?:extend.itemcost}</div>
+			<div title="Рекомендуемая цена" class="text-right ml-2">{(Цена|...Цена)?:extend.itemcost}</div>
 		</div>
 		
 		
@@ -282,45 +273,57 @@
 			Catkit.hand(div);
 		})();
 	</script>
-	{kitlistgroup:}
+	{kitlistgroup:}	
+		{:kitlist-{(data.pos.catkitgroups[~key].tpl|~conf.catkit.tplgroups)}}
+	{kitlist-table:}
 		<h3>{~key}</h3>
-		<div class="row">{::prkit}</div>
-		{prkit2:}
-			<div class="col-sm-4 d-flex align-items-center justify-content-center space" 
-				style="
-					background-image:url('/-imager/?w=528&src={images.0}'); 
-					background-size: contain;
-					background-position: center;
-					background-repeat: no-repeat;
-					color:white;
-				">
-
-				<div class="my-5 px-2 py-2" style="text-align:center; width:100%; background-color:rgba(0,0,0,0.5);">
-					
-					<span class="{~inArray(kitid,data.pos.catkits)?:font-weight-bold} a catkit add" data-crumb="false" 
-					onclick="return false"
-					data-article_nick="{article_nick}" 
-					data-item_num="{item_num}"
-					href="/{crumb}">Добавить</span>
-					
-					<span class="{~inArray(kitid,data.pos.catkits)??:d-none}"> | 
-						<span class="a catkit del" data-crumb="false" 
-						onclick="return false"
-						data-article_nick="{article_nick}" 
-						data-item_num="{item_num}"
-						href="/{crumb}">Убрать</span><br></span>
-
-					<span class="a catkit rep" data-crumb="false" 
-					onclick="return false"
-					data-article_nick="{article_nick}" 
-					data-item_num="{item_num}"
-					href="/{crumb}">Заменить</span><br>
-
-
-					{Наименование}<br>
-					<a href="/{:cat.pospath}{:cat.mark.set}"><b>{article}</b></a>
+		<div>{::prkit-table}</div>
+		{prkit-table:}
+			<div class="d-flex mb-2">
+				<div class="mr-2">
+					<a href="/{:cat.pospath}{:cat.mark.set}"><img src="/-imager/?h=70&src={images.0}"></a>
+				</div>
+				<div class="flex-grow-1" style="min-width:0">
+					<div><a href="/{:cat.pospath}{:cat.mark.set}">{Наименование} {article}</a></div>
+					<div class="d-flex">
+						<div class="flex-grow-1 mr-1" style="min-width:0">
+							{~length(items)?items::prkititems2item?:prkitone2item}
+						</div>
+						<div style="white-space: nowrap;">
+							{~length(items)?items::prkititems2cost?((Цена|...Цена)?:prkitone2cost)}
+						</div>
+					</div>
 				</div>
 			</div>
+
+		{prkititems2item:}
+			<div style="flex-grow:1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+				<a href="/{:cat.pospath}{:cat.mark.set}">{item}</a>
+			</div>
+		{nocost:}
+			<div class="text-right">
+				<span class="disabled {~inArray(kitid,data.pos.catkits)?:font-weight-bold} catkit add btn btn-sm btn-warning catkit-ico"
+				data-article_nick="{...article_nick}" 
+				data-item_num="{item_num}"><i class="fas fa-plus"></i></span>
+			</div>
+		{prkititems2cost:}
+			{(Цена|...Цена)?:prkititems2costshow?:nocost}
+			{prkititems2costshow:}
+			<div>
+				{:extend.itemcost}&nbsp;<span class="{~inArray(kitid,data.pos.catkits)?:font-weight-bold} catkit add btn btn-sm btn-warning catkit-ico"
+				data-article_nick="{...article_nick}" 
+				data-item_num="{item_num}"><i class="fas fa-plus"></i></span>
+			</div>
+		{prkitone2item:}
+		{prkitone2cost:}
+			<div>
+				{:extend.itemcost}&nbsp;<span class="{~inArray(kitid,data.pos.catkits)?:font-weight-bold} catkit add btn btn-sm btn-warning catkit-ico"
+					data-article_nick="{article_nick}" 
+					data-item_num="{item_num}"><i class="fas fa-plus"></i></span>
+			</div>
+	{kitlist-blocks:}
+		<h3>{~key}</h3>
+		<div class="row">{::prkit}</div>
 		{prkit:}
 			<div class="col-sm-4 space" style="font-size:13px">
 				<center><img class="img-fluid" src="/-imager/?h=400&w=400&crop=1&src={images.0}"></center>
@@ -337,14 +340,12 @@
 				</div>
 				<div class="">
 					{~length(items)?items::prkititems?:prkitone}
-					
-
-
-					
 				</div>
 			</div>
 			{prkititems:}
 				<div style="flex-grow:1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{item}</div>
+				{(Цена|...Цена)?:prkititemscost}
+				{prkititemscost:}
 				<div class="text-right">{:extend.itemcost}
 					&nbsp;
 					<span class="{~inArray(kitid,data.pos.catkits)?:font-weight-bold} catkit add btn btn-sm btn-warning catkit-ico"
@@ -360,6 +361,7 @@
 					data-item_num="{item_num}"><i class="fas fa-plus"></i></span>
 				</div>
 {POSCOLUMN:}
+
 	<div class="stick-cont">
 		<style>
 			#{div} .stick-cont {
@@ -466,7 +468,7 @@
 
 		});
 	</script>
-	{linkkitlist:}<span class="a" onclick="Ascroll.go('#kitlist')"><b>Компоненты</b></span><br>
+	{linkkitlist:}<span class="a" onclick="Ascroll.go('#kitlist')">Выбрать компоненты</span><br>
 	{linkkits:}<span class="a" onclick="Ascroll.go('#kits')">Совместимость</span><br>
 	{linktexts:}<span class="a" onclick="Ascroll.go('#texts')">Технические характеристики</span><br>
 	{linkfeatures:}<span class="a" onclick="Ascroll.go('#features')">Особенности</span><br>
