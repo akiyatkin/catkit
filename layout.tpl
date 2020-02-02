@@ -163,8 +163,8 @@
 
 			{~length(pos.kit)?:showkits}
 		</div>
-		{~length(pos.kit)?:showkitcost?(Цена?:showposcost)}
-		<div class="between mt-2">{Цена?pos:extend.basketrow}</div>
+		{~length(pos.kit)?:showkitcost?(pos.Цена?:showposcost)}
+		<div class="between mt-2">{pos.Цена?pos:extend.basketrow}</div>
 	</div>
 	{showposcost:}
 		<div class="d-flex justify-content-between align-items-end"><div>Официальная цена:&nbsp;</div><div>{pos:extend.itemcost}</div></div>
