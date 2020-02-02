@@ -163,8 +163,8 @@
 
 			{~length(pos.kit)?:showkits}
 		</div>
-		{~length(pos.kit)?:showkitcost?:showposcost}
-		<div class="between mt-2">{pos:extend.basketrow}</div>
+		{~length(pos.kit)?:showkitcost?(Цена?:showposcost)}
+		<div class="between mt-2">{Цена?pos:extend.basketrow}</div>
 	</div>
 	{showposcost:}
 		<div class="d-flex justify-content-between align-items-end"><div>Официальная цена:&nbsp;</div><div>{pos:extend.itemcost}</div></div>
@@ -247,7 +247,7 @@
 				">
 
 				<div class="my-5 px-2 py-2" style="text-align:center; width:100%; background-color:rgba(0,0,0,0.5);">{Наименование}<br>
-					<a href="/{:cat.pospathadd}{data.pos:cat.kit}{:cat.mark.set}"><b>{article}</b></a>
+					<a href="/{:cat.pospath}{:cat.mark.set}"><b>{article}</b></a>
 				</div>
 			</div>
 
