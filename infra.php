@@ -117,7 +117,16 @@ Event::handler('Showcase-position.onsearch', function (&$pos){
 Event::handler('Showcase-position.onshow', function (&$pos){
 	if (empty($pos['compatibilities'])) return;
 	//Наполняем комплекты, к которым подходит текущая позиция
+
+	$r = explode(',',$pos['compatibilities']);
+	if (sizeof($r) > 3) {
+		unset($pos['compatibilities']);
+		return;
+	}
 	$pos['compatibilities'] = Catkit::explode($pos['compatibilities'], $pos['producer_nick']);
+	
+	
+
 });
 Event::handler('Showcase-position.onshow', function (&$pos){	
 	//Проверяем у кого есть комплектующие
