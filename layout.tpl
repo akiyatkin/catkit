@@ -299,11 +299,7 @@
 			</div>
 
 		{prkititems2item:}
-			<div style="flex-grow:1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-				
-					{more.Код}
-				
-			</div>
+			<div style="flex-grow:1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{more.Код}</div>
 		{nocost:}
 			<div class="text-right">
 				<span class="disabled {~inArray(kitid,data.pos.catkits)?:font-weight-bold} catkit add btn btn-sm btn-warning catkit-ico"
