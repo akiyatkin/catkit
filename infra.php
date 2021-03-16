@@ -13,6 +13,7 @@ Event::handler('Showcase.onconfig', function (&$opt) {
 
 //showcase.php
 	Event::handler('Showcase-catalog.onload', function ($obj) {
+
 		$pos = &$obj['pos']; //pos после Xlsx::make()
 		if (empty($pos['more']['Совместимость'])) return; //Комплект к которому относится позиция
 		$kit = Catkit::explode($pos['more']['Совместимость'], $pos['producer']);

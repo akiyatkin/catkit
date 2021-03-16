@@ -39,12 +39,13 @@ class Catkit {
 			$article_nick = Path::encode($r[0]);
 			if (!empty($r[1])) $item_num = Path::encode($r[1]);
 			else $item_num = 1;
-			$p = Showcase::getModel($producer_nick, $article_nick, $item_num);
+
+			$p = Showcase::getModelEasy($producer_nick, $article_nick, $item_num);
 			if (!$p) $p = [];
 			$p['present'] = trim($catkit);
 			return $p;
 		}, $r);
-
+		
 		$kit = [];
 
 		foreach ($catkit as $res) {
