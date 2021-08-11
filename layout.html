@@ -2,6 +2,11 @@
 {rowCONTENTandCOLUMN:}
 	<section class="container">
 		<style>
+			#{div} .boomrow {
+				display: grid;
+				grid-template-columns: 2fr 1fr;
+				grid-gap: 20px;
+			}
 			@media (max-width: 991px) {
 				body.hiddenoverflow {
 					overflow: hidden;
@@ -36,25 +41,51 @@
 			}
 		</style>
 
-		<div class="row boomrow">
-			<div class="col-lg-8 col-xl-8" id="CONTENT"></div>
-			<div class="col-lg-4 col-xl-4" id="COLUMN"></div>
+		<div class="boomrow">
+			<div id="CONTENT"></div>
+			<div id="COLUMN"></div>
 		</div>
 	</section>
 {CATKITPRESENT:}
 	<div>
 		<style>
-			#{div} .openinfo {
+			#{div} .brick .openinfo {
 				display:none;
 				/*visibility: hidden;*/
 			}
+			#{div} .brick {
+				margin-bottom: 2px;
+				display: flex;
+				flex-direction: row;
+				justify-content: space-between;
+			}
+			#{div} .brick .name {
+				order: 1;
+			}
+			#{div} .brick .kit {
+				order: 2;
+			}
+			#{div} .brick .openinfo {
+				color:red
+				margin-bottom: 0;
+			}
 			@media (max-width: 991px) {
-				
-				#{div} .openinfo {
+				#{div} .brick {
+					flex-direction: column;
+				}
+				#{div} .brick .name {
+					order: 2;
+				}
+				#{div} .brick .kit {
+					text-align:right;
+					order: 1;
+				}
+				#{div} .brick .openinfo {
 					/*visibility: visible;*/
+					margin-bottom: 2px;
 					display:inline-block;
 				}
-				#{div} .openinfo.show {
+				#{div} .brick .openinfo.show {
 					display:none;
 				}
 				
@@ -64,13 +95,19 @@
 		{data:show}
 	</div>
 	<script async type="module">
-		let iscontext = () => {
+		
+		const div = document.getElementById('{div}');
+		const col = document.getElementById('COLUMN');
+		const cls = cls => col.getElementsByClassName(cls)
+		const tag = tag => col.getElementsByTagName(tag)
+
+		const iscontext = () => {
 			if (!window.Controller) return true;
 			let layer = Controller.ids[{id}];
 			if (!layer) return true;
 			return layer.counter == {counter};
 		}
-		let hide = () => {
+		const hide = () => {
 			col.classList.remove('show');
 			document.body.classList.remove('hiddenoverflow');
 			var elements = col.getElementsByClassName('biginfo');
@@ -87,7 +124,7 @@
 				elements[i].classList.remove('show');
 			}
 		}
-		let show = () => {
+		const show = () => {
 			col.classList.add('show');
 			document.body.classList.add('hiddenoverflow');
 			var elements = col.getElementsByClassName('biginfo');
@@ -105,8 +142,7 @@
 			}
 		}
 		
-		let div = document.getElementById('{div}');
-		let col = document.getElementById('COLUMN');
+		
 		
 		var elements = col.getElementsByTagName('a');
 		for (let i = 0; i < elements.length; i++) {
@@ -129,38 +165,26 @@
 		if (col.classList.contains('show')) show();
 	</script>
 	
-	<script async type="module">
-		(async () => {
-			let Load = (await import('/vendor/akiyatkin/load/Load.js')).default;
-			let Catkit = await Load.on('import-default', '/vendor/akiyatkin/catkit/Catkit.js');
-			
-			let iscontext = () => {
-				if (!window.Controller) return true;
-				let layer = Controller.ids[{id}];
-				if (!layer) return true;
-				return layer.counter == {counter};
-			}
+	<script asycn type="module">
+		import { Load } from "/vendor/akiyatkin/load/Load.js"
+		import { Catkit } from "/vendor/akiyatkin/catkit/Catkit.js"
 
-			if (!iscontext()) return;
-			let div = document.getElementById('{div}');	
-			Catkit.hand(div);
-		})();
+		const div = document.getElementById('{div}');	
+		Catkit.hand(div);
 	</script>
 	{kitopen:}Показать комплектацию
 	{posopen:}Навигация по описанию
 	{show:}
 	<div>
-		<div class="mb-1 d-flex flex-column flex-md-row justify-content-between">
-			
-			<div class="order-2 order-md-1"><b>{pos.Наименование} {pos.article} {pos.more.Код}</b></div>
-			<div class="order-1 order-md-2 text-right">
-				<nobr class="mb-1 mb-md-0 a openinfo" style="color:red">
+		<div class="brick">
+			<div class="name"><b>{pos.Наименование} {pos.article} {pos.more.Код}</b></div>
+			<div class="kit">
+				<nobr class="a openinfo">
 					{~length(pos.kit)?:kitopen?:posopen}
 				</nobr>
 			</div>
 		</div>
 		<div class="biginfo">
-
 			{~length(pos.kit)?:showkits}
 		</div>
 		{~length(pos.kit)?:showkitcost?(pos.Цена?:showposcost)}
@@ -257,21 +281,11 @@
 	<h2 id="kitlist">Компоненты</h2>
 	{kitlist::kitlistgroup}
 	<script async type="module">
-		(async () => {
-			let iscontext = () => {
-				if (!window.Controller) return true;
-				let layer = Controller.ids[{id}];
-				if (!layer) return true;
-				return layer.counter == {counter};
-			}
+		import { Load } from "/vendor/akiyatkin/load/Load.js"
+		import { Catkit } from "/vendor/akiyatkin/catkit/Catkit.js"
 
-			let Load = (await import('/vendor/akiyatkin/load/Load.js')).default;
-			let Catkit = await Load.on('import-default', '/vendor/akiyatkin/catkit/Catkit.js');
-			
-			if (!iscontext()) return;
-			let div = document.getElementById('{div}');	
-			Catkit.hand(div);
-		})();
+		const div = document.getElementById('{div}');	
+		Catkit.hand(div);
 	</script>
 	{kitlistgroup:}	
 		<div style="font-size:13px">
@@ -362,7 +376,6 @@
 					data-item_num="{item_num}"><i class="fas fa-plus"></i></span>
 				</div>
 {POSCOLUMN:}
-
 	<div class="stick-cont">
 		<style>
 			#{div} .stick-cont {
@@ -371,6 +384,9 @@
 
 			}
 
+			#{div} .biginfo {
+				margin-bottom: 15px;
+			}
 			#{div} .stick {
 				position: sticky;
 				top:0;
@@ -381,6 +397,8 @@
 				
 			}
 			#{div} .closeinfo {
+				float:right; 
+				color:red;
 				display:none;
 			}
 			@media (max-width: 991px) {
@@ -412,9 +430,9 @@
 			}
 		</style>
 		<div class="stick-el stick">
-			<div class="biginfo mb-3">
-				<span style="color:red" class="closeinfo a float-right">Свернуть</span>
-				<span class="a" onclick="Ascroll.go('.cat-position')">Общая информация</span><br>
+			<div class="biginfo">
+				<span class="closeinfo a">Свернуть</span>
+				<span onclick="this.dataset.click = true" class="a" data-anchor=".cat-position">Общая информация</span><br>
 				{~length(compatibilities)?:linkkits}
 				{~length(texts)?:linktexts}
 				{~length(features)?:linkfeatures}
@@ -426,15 +444,27 @@
 			<div id="CATKITPRESENT"></div>
 		</div>
 	</div>
-	
+	<script type="module">
+		const div = document.getElementById('{div}')
+		const cls = (cls, el = div) => el.getElementsByClassName(cls)
+		const tag = (tag, el = div) => el.getElementsByTagName(tag)
+		const menu = cls('biginfo')[0]
+		for ( const a of cls('a', menu)) {
+			a.addEventListener('click', async () => {
+				const { Ascroll } = await import('/vendor/infrajs/ascroll/Ascroll.js')
+				Ascroll.go(a.dataset.anchor)
+			})
+			if (a.dataset.click) a.click()
+		}
+	</script>
 	<script async type="module">
-		let iscontext = () => {
+		const iscontext = () => {
 			if (!window.Controller) return true;
 			let layer = Controller.ids[{id}];
 			if (!layer) return true;
 			return layer.counter == {counter};
 		}
-		let div = document.getElementById('{div}');
+		const div = document.getElementById('{div}');
 		let el = div.getElementsByClassName('stick-el')[0];
 		let lastScrollTop = 0;
 		window.addEventListener('scroll', () => {
@@ -470,9 +500,9 @@
 
 		});
 	</script>
-	{linkkitlist:}<hr><i class="far fa-edit"></i>&nbsp;<span class="a" onclick="Ascroll.go('#kitlist')">Выбрать компоненты</span><hr>
-	{linkkits:}<span class="a" onclick="Ascroll.go('#kits')">Совместимость</span><br>
-	{linktexts:}<span class="a" onclick="Ascroll.go('#texts')">Технические характеристики</span><br>
-	{linkfeatures:}<span class="a" onclick="Ascroll.go('#features')">Особенности</span><br>
-	{linkyoutube:}<span class="a" onclick="Ascroll.go('#youtubevideo')">Отзывы и видео с Youtube</span><br>
-	{linkfiles:}<span class="a" onclick="Ascroll.go('#files')">Файлы</span><br>
+	{linkkitlist:}<hr><i class="far fa-edit"></i>&nbsp;<span onclick="this.dataset.click = true" class="a" data-anchor="#kitlist">Выбрать компоненты</span><hr>
+	{linkkits:}<span onclick="this.dataset.click = true" class="a" data-anchor="#kits">Совместимость</span><br>
+	{linktexts:}<span onclick="this.dataset.click = true" class="a" data-anchor=".texts">Технические характеристики</span><br>
+	{linkfeatures:}<span onclick="this.dataset.click = true" class="a" data-anchor="#features">Особенности</span><br>
+	{linkyoutube:}<span onclick="this.dataset.click = true" class="a" data-anchor="#youtubevideo">Отзывы и видео с Youtube</span><br>
+	{linkfiles:}<span onclick="this.dataset.click = true" class="a" data-anchor=".files">Файлы</span><br>

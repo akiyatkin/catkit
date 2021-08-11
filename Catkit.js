@@ -1,8 +1,8 @@
-import Fire from '/vendor/akiyatkin/load/Fire.js';
-import Seq from '/vendor/infrajs/sequence/Seq.js';
-import Load from '/vendor/akiyatkin/load/Load.js';
-export {Fire, Seq, Load};
-export let Catkit = {
+import { Fire } from '/vendor/akiyatkin/load/Fire.js';
+import { Seq } from '/vendor/infrajs/sequence/Seq.js';
+import { Load } from '/vendor/akiyatkin/load/Load.js';
+
+const Catkit = {
 	row: () => {
 		alert(1);
 	},
@@ -77,7 +77,7 @@ export let Catkit = {
 	},
 	data: async () => {
 		await Catkit.wait();
-		return Load.on('fetch-json', Controller.names.catkit.json);
+		return Load.fire('fetch-json', Controller.names.catkit.json);
 	},
 	now: async () => {
 		await Catkit.wait();
@@ -109,5 +109,8 @@ export let Catkit = {
 
 }
 //debug
+export {Fire, Seq, Load};
 window.Catkit = Catkit;
-export default Catkit;
+
+
+export { Catkit }

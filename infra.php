@@ -143,7 +143,7 @@ Event::handler('Showcase-position.onshow', function (&$pos){
 	$pos['kitlist'] = array_reduce($data['list'], function ($carry, $p) {
 		if (empty($p['Группа в комплекте'])) $p['Группа в комплекте'] = '';		
 		if(empty($carry[$p['Группа в комплекте']])) $carry[$p['Группа в комплекте']] = [];
-		$p['kitid'] = $p['article_nick'].($p['item_nick']?(':'.$p['item_num']):'');
+		$p['kitid'] = $p['article_nick'].($p['item_num']?(':'.$p['item_num']):'');
 		$carry[$p['Группа в комплекте']][] = $p;
 
 		return $carry;
