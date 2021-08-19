@@ -1,4 +1,5 @@
 {extend::}-catalog/extend.tpl
+{model::}-catalog/model.tpl
 {rowCONTENTandCOLUMN:}
 	<section class="container">
 		<style>
@@ -93,7 +94,9 @@
 			}
 		</style>
 		{data:show}
+
 	</div>
+
 	<script async type="module">
 		
 		const div = document.getElementById('{div}');
@@ -188,7 +191,10 @@
 			{~length(pos.kit)?:showkits}
 		</div>
 		{~length(pos.kit)?:showkitcost?(pos.Цена?:showposcost)}
-		<div class="between mt-2">{pos.Цена?pos:extend.basketrow}</div>
+		<div class="between mt-2">
+			{pos.Цена?pos:extend.basketrow}
+		</div>
+		{:model.basket-script}
 	</div>
 	{showposcost:}
 		<div class="d-flex justify-content-between align-items-end"><div>Официальная цена:&nbsp;</div><div>{pos:extend.itemcost}</div></div>
@@ -222,13 +228,9 @@
 			<div>
 				<span {....iscatkit??:deftitle} 
 					class="{....iscatkit??:disabled} btn btn-sm btn-outline-warning catkit-ico catkit del ml-2"
-					data-crumb="false" 
-					onclick="return false"
-
 					data-article_nick="{article_nick}" 
 					data-item_num="{item_num}"
-
-				><i class="fas fa-times"></i></span>
+				>-</span>
 			</div>
 		</div>
 
@@ -318,7 +320,7 @@
 			<div class="text-right">
 				<span class="disabled {~inArray(kitid,data.pos.catkits)?:font-weight-bold} catkit add btn btn-sm btn-warning catkit-ico"
 				data-article_nick="{...article_nick}" 
-				data-item_num="{item_num}"><i class="fas fa-plus"></i></span>
+				data-item_num="{item_num}">+</span>
 			</div>
 		{prkititems2cost:}
 			{(Цена|...Цена)?:prkititems2costshow?:nocost}
@@ -326,14 +328,14 @@
 			<div>
 				{:extend.itemcost}&nbsp;<span class="{~inArray(kitid,data.pos.catkits)?:font-weight-bold} catkit add btn btn-sm btn-warning catkit-ico"
 				data-article_nick="{...article_nick}" 
-				data-item_num="{item_num}"><i class="fas fa-plus"></i></span>
+				data-item_num="{item_num}">+</span>
 			</div>
 		{prkitone2item:}
 		{prkitone2cost:}
 			<div>
 				{:extend.itemcost}&nbsp;<span class="{~inArray(kitid,data.pos.catkits)?:font-weight-bold} catkit add btn btn-sm btn-warning catkit-ico"
 					data-article_nick="{article_nick}" 
-					data-item_num="{item_num}"><i class="fas fa-plus"></i></span>
+					data-item_num="{item_num}">+</span>
 			</div>
 	{kitlist-blocks:}
 		<div class="row">{::prkit}</div>
@@ -365,7 +367,7 @@
 					&nbsp;
 					<span class="{~inArray(kitid,data.pos.catkits)?:font-weight-bold} catkit add btn btn-sm btn-warning catkit-ico"
 					data-article_nick="{...article_nick}" 
-					data-item_num="{item_num}"><i class="fas fa-plus"></i></span>
+					data-item_num="{item_num}">+</span>
 				</div>
 				
 			{prkitone:}
@@ -373,7 +375,7 @@
 					&nbsp;
 					<span class="{~inArray(kitid,data.pos.catkits)?:font-weight-bold} catkit add btn btn-sm btn-warning catkit-ico"
 					data-article_nick="{article_nick}" 
-					data-item_num="{item_num}"><i class="fas fa-plus"></i></span>
+					data-item_num="{item_num}">+</span>
 				</div>
 {POSCOLUMN:}
 	<div class="stick-cont">
@@ -445,6 +447,7 @@
 		</div>
 	</div>
 	<script type="module">
+		// import { Config } from '/vendor/infrajs/config/Config.js'
 		const div = document.getElementById('{div}')
 		const cls = (cls, el = div) => el.getElementsByClassName(cls)
 		const tag = (tag, el = div) => el.getElementsByTagName(tag)
@@ -452,7 +455,8 @@
 		for ( const a of cls('a', menu)) {
 			a.addEventListener('click', async () => {
 				const { Ascroll } = await import('/vendor/infrajs/ascroll/Ascroll.js')
-				Ascroll.go(a.dataset.anchor)
+				//const conf = Config.get('ascroll');
+				if (a.dataset.anchor) Ascroll.go(a.dataset.anchor)
 			})
 			if (a.dataset.click) a.click()
 		}

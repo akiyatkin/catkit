@@ -63,7 +63,7 @@ class Catkit {
 		$catkit = [];
 		foreach ($kit as $p) {
 			$c = $p['article'];
-			if ($p['item']) $c .= ':'.$p['item'];
+			if ($p['item_num']) $c .= ':'.$p['item_num'];
 			$catkit[] = $c;
 		}
 		$catkit = implode(', ', $catkit);

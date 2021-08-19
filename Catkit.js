@@ -1,16 +1,17 @@
 import { Fire } from '/vendor/akiyatkin/load/Fire.js';
 import { Seq } from '/vendor/infrajs/sequence/Seq.js';
 import { Load } from '/vendor/akiyatkin/load/Load.js';
+import { Event as OldEvent } from '/vendor/infrajs/event/Event.js';
 
 const Catkit = {
 	row: () => {
 		alert(1);
 	},
-	set: (now) => {
-		let base = Controller.names.catalog.crumb.child.child;
+	set: async now => {
+		const { Crumb } = await import('/vendor/infrajs/controller/src/Crumb.js')
+		let base = Crumb.getInstance('catalog');
 		let go = '/' + (base.child ? base.child : base + '/1');
 		go += (now.length ? ('/' + now.join("&")) : '') + location.search;
-		
 		history.pushState(null, null, go);
 		let event = new Event("popstate");
   		window.dispatchEvent(event);
@@ -62,29 +63,30 @@ const Catkit = {
 		let kit = pos.article_nick + (item_num != 1 ? (':' + item_num) : '');
 		return kit;
 	},
-	del: (dataset) => {
+	del: dataset => {
 		//Работает только на странице вида .../producer_nick/article_nick/item_num/kit&kit?get
-		Catkit.now().then((now) => {
-			let index = now.lastIndexOf(Catkit.kit(dataset));
-			if (index !== -1) now.splice(index, 1); //Удалили
-			Catkit.set(now);
-		});
+		Catkit.now().then(now => {
+			const index = now.lastIndexOf(Catkit.kit(dataset))
+			if (index !== -1) now.splice(index, 1) //Удалили
+			Catkit.set(now)
+		})
 	},
 	wait: () => {
-		if (Catkit.wait.promise) return Catkit.wait.promise;
-		return Catkit.wait.promise = new Promise((resolve, reject) => 
-			domready(() => Event.one('Controller.onshow', resolve)));
+		return import('/vendor/infrajs/controller/src/Controller.js').then(({ Controller }) => {
+			if (Catkit.wait.promise) return Catkit.wait.promise;
+			return Catkit.wait.promise = new Promise((resolve, reject) => OldEvent.one('Controller.onshow', resolve));
+		})
 	},
 	data: async () => {
 		await Catkit.wait();
-		return Load.fire('fetch-json', Controller.names.catkit.json);
+		return Load.fire('json', Controller.names.catkit.json);
 	},
 	now: async () => {
 		await Catkit.wait();
-		let now = Seq.get(Controller.names.catalog.crumb, 'child.child.child.child.name','');
+		const { Crumb } = await import('/vendor/infrajs/controller/src/Crumb.js')
+		let now = Seq.get(Crumb.getInstance('catalog'), 'child.child.child.child.name','')
 		if (!now) {
-			let data = await Catkit.data();
-			console.log(data);
+			const data = await Catkit.data();
 			now = Seq.get(data,'pos.catkit','');
 		}
 		return now.split('&').filter(Boolean);
@@ -102,9 +104,9 @@ const Catkit = {
 		});
 		div.querySelectorAll('.catkit.del').forEach(a => {
 			a.addEventListener('click', (e) => {
-				Catkit.del(a.dataset);
-			});
-		});
+				Catkit.del(a.dataset)
+			})
+		})
 	}
 
 }

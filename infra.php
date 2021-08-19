@@ -5,10 +5,11 @@ use akiyatkin\showcase\Showcase;
 use akiyatkin\showcase\Prices;
 use infrajs\cart\Cart;
 use akiyatkin\catkit\Catkit;
+use akiyatkin\showcase\api2\API;
 
 
 Event::handler('Showcase.onconfig', function (&$opt) {
-	$opt['columns'] = array_merge($opt['columns'], ["compatibilities","Совместимость","Группа в комплекте"]);
+	$opt['columns'] = array_merge($opt['columns'], ["kit","kitcount","catkits","catkit", "compatibilities","Совместимость","Группа в комплекте"]);
 });
 
 //showcase.php
@@ -38,6 +39,7 @@ Event::handler('Showcase.onconfig', function (&$opt) {
 	});
 
 Event::handler('Showcase-position.onsearch', function (&$pos){
+
 	if (!empty($pos['catkit'])) {
 		$catkit = $pos['catkit'];
 		$pos['iscatkit'] = true; //Если новый catkit ec
@@ -47,13 +49,11 @@ Event::handler('Showcase-position.onsearch', function (&$pos){
 	}
 	
 	
-	
 	$emptycat = [];
 	$emptycost = [];
 	$find = [];
 	$kit = Catkit::explode($catkit, $pos['producer_nick']);
 	$cost = 0;
-
 	$count = 0;
 	Catkit::run($kit, function($p, $group, $i) use (&$count, &$cost, &$kit, &$emptycat, &$emptycost, &$find) {
 		if (empty($p['article_nick'])) {
@@ -160,21 +160,24 @@ function setKitPhoto(&$pos) {
 	*/
 	
 	if (isset($pos['kit'])) {
-		$group = Showcase::getGroup($pos['group_nick']);
-		$firstkitphoto = empty($group['showcase']['firstkitphoto']) ? '' : $group['showcase']['firstkitphoto'];
+		//$group = Showcase::getGroup($pos['group_nick']);
 		$images = [];
-		if ($firstkitphoto) {
-			$kitlist = array_reduce($pos['kit'], function ($carry, $p){
-				if (empty($p['Группа в комплекте'])) $p['Группа в комплекте'] = '';
-					
-				if(empty($carry[$p['Группа в комплекте']])) $carry[$p['Группа в комплекте']] = [];
-				$carry[$p['Группа в комплекте']][] = $p;
-				return $carry;
-			},[]);	
-			if (isset($kitlist[$firstkitphoto])) { //и есть выбранный главный компонент
-				foreach ($kitlist[$firstkitphoto] as $p) { //Берём фото главного
-					if (empty($p['images'])) continue;
-					$images[]= $p['images'][0];
+		if (isset($pos['group_id'])) {
+			$group = API::getGroupById($pos['group_id']);
+			$firstkitphoto = empty($group['showcase']['firstkitphoto']) ? '' : $group['showcase']['firstkitphoto'];
+			if ($firstkitphoto) {
+				$kitlist = array_reduce($pos['kit'], function ($carry, $p){
+					if (empty($p['Группа в комплекте'])) $p['Группа в комплекте'] = '';
+						
+					if(empty($carry[$p['Группа в комплекте']])) $carry[$p['Группа в комплекте']] = [];
+					$carry[$p['Группа в комплекте']][] = $p;
+					return $carry;
+				},[]);	
+				if (isset($kitlist[$firstkitphoto])) { //и есть выбранный главный компонент
+					foreach ($kitlist[$firstkitphoto] as $p) { //Берём фото главного
+						if (empty($p['images'])) continue;
+						$images[]= $p['images'][0];
+					}
 				}
 			}
 		}
