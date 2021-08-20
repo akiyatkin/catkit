@@ -18,7 +18,7 @@ const Catkit = {
 	},
 	add: async dataset => {
 		const now = await Catkit.now();
-		now.unshift(Catkit.kit(dataset));//Добавили
+		now.push(Catkit.kit(dataset));//Добавили
 		Catkit.set(now);
 	},
 	run: (kitlist, callback) => {

@@ -9,7 +9,7 @@ use akiyatkin\showcase\api2\API;
 
 
 Event::handler('Showcase.onconfig', function (&$opt) {
-	$opt['columns'] = array_merge($opt['columns'], ["kit","kitcount","catkits","catkit", "compatibilities","Совместимость","Группа в комплекте"]);
+	$opt['columns'] = array_merge($opt['columns'], ["kit","kitcount","iscatkit","catkits","catkit", "compatibilities","Совместимость","Группа в комплекте"]);
 });
 
 //showcase.php
