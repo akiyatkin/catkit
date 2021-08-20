@@ -320,7 +320,7 @@
 			<div class="text-right">
 				<span class="disabled {~inArray(kitid,data.pos.catkits)?:font-weight-bold} catkit add btn btn-sm btn-warning catkit-ico"
 				data-article_nick="{...article_nick}" 
-				data-item_num="{item_num}">+</span>
+				data-item_num="{...item_num}">+</span>
 			</div>
 		{prkititems2cost:}
 			{(Цена|...Цена)?:prkititems2costshow?:nocost}
@@ -328,7 +328,7 @@
 			<div>
 				{:extend.itemcost}&nbsp;<span class="{~inArray(kitid,data.pos.catkits)?:font-weight-bold} catkit add btn btn-sm btn-warning catkit-ico"
 				data-article_nick="{...article_nick}" 
-				data-item_num="{item_num}">+</span>
+				data-item_num="{...item_num}">+</span>
 			</div>
 		{prkitone2item:}
 		{prkitone2cost:}
@@ -363,11 +363,12 @@
 					<div style="white-space: nowrap;">{(Цена|...Цена)?:prkititemscost}</div>
 				</div>
 				{prkititemscost:}
+
 				<div class="text-right">{:extend.itemcost}
 					&nbsp;
 					<span class="{~inArray(kitid,data.pos.catkits)?:font-weight-bold} catkit add btn btn-sm btn-warning catkit-ico"
 					data-article_nick="{...article_nick}" 
-					data-item_num="{item_num}">+</span>
+					data-item_num="{~key}">+</span>
 				</div>
 				
 			{prkitone:}

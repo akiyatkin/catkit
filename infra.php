@@ -75,6 +75,7 @@ Event::handler('Showcase-position.onsearch', function (&$pos){
 	$pos['catkit'] = Catkit::implode($kit);
 
 	$pos['catkits'] = explode('&', $pos['catkit']);
+	
 	$pos['Комплектация'] = Catkit::present($kit);
 
 	$pos['Цена'] = $cost;

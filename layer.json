@@ -5,5 +5,5 @@
 	"tplroot":"CATKITPRESENT",
 	"name":"catkit",
 	"redirecttpl":"{data.pos?:red}{red:}/{crumb}/{data.pos.producer_nick}/{data.pos.article_nick}{(data.pos.item_num!:1|data.pos.iscatkit)?data.pos.item_num:s}{data.pos.iscatkit?data.pos.catkit:s}{s:}/{.}",
-	"jsontpl":"-showcase/api2/pos?producer_nick={crumb.child.name}&article_nick={crumb.child.child.name}&item_num={crumb.child.child.child.name|:1}&catkit={crumb.child.child.child.child.name}"
+	"jsontpl":"-showcase/api2/pos?producer_nick={crumb.child.name}&article_nick={crumb.child.child.name}&item_num={crumb.child.child.child.name|:1}&catkit={~encode(crumb.child.child.child.child.name)}"
 }

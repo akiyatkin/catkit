@@ -9,15 +9,15 @@ const Catkit = {
 	},
 	set: async now => {
 		const { Crumb } = await import('/vendor/infrajs/controller/src/Crumb.js')
-		let base = Crumb.getInstance('catalog');
+		let base = Crumb.getInstance('catalog').child.child;
 		let go = '/' + (base.child ? base.child : base + '/1');
 		go += (now.length ? ('/' + now.join("&")) : '') + location.search;
 		history.pushState(null, null, go);
 		let event = new Event("popstate");
   		window.dispatchEvent(event);
 	},
-	add: async (dataset) => {
-		let now = await Catkit.now();
+	add: async dataset => {
+		const now = await Catkit.now();
 		now.unshift(Catkit.kit(dataset));//Добавили
 		Catkit.set(now);
 	},
@@ -72,10 +72,11 @@ const Catkit = {
 		})
 	},
 	wait: () => {
-		return import('/vendor/infrajs/controller/src/Controller.js').then(({ Controller }) => {
-			if (Catkit.wait.promise) return Catkit.wait.promise;
-			return Catkit.wait.promise = new Promise((resolve, reject) => OldEvent.one('Controller.onshow', resolve));
-		})
+		return DOM.fire('check')
+		// return import('/vendor/infrajs/controller/src/Controller.js').then(({ Controller }) => {
+		// 	if (Catkit.wait.promise) return Catkit.wait.promise;
+		// 	return Catkit.wait.promise = new Promise((resolve, reject) => OldEvent.one('Controller.onshow', resolve));
+		// })
 	},
 	data: async () => {
 		await Catkit.wait();
