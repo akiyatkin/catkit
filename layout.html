@@ -1,5 +1,5 @@
 {extend::}-catalog/extend.tpl
-{model::}-catalog/model.tpl
+{model::}-catalog/model.tpl?v={~conf.index.v}
 {rowCONTENTandCOLUMN:}
 	<section class="container">
 		<style>
@@ -191,28 +191,36 @@
 			{~length(pos.kit)?:showkits}
 		</div>
 		{~length(pos.kit)?:showkitcost?(pos.Цена?:showposcost)}
-		<div class="between mt-2">
+		<div class="between" style="margin-top: 0.5rem">
 			{pos.Цена?pos:extend.basketrow}
 		</div>
 		{:model.basket-script}
 	</div>
 	{showposcost:}
-		<div class="d-flex justify-content-between align-items-end"><div>Официальная цена:&nbsp;</div><div>{pos:extend.itemcost}</div></div>
+		<div style="display: flex; justify-content: space-between; align-items: flex-end;">
+			<div>Официальная цена:&nbsp;</div><div>{pos:extend.itemcost}</div>
+		</div>
 	{showkits:}
 		<div style="overflow-y: auto">
 			{pos.kit::groups}
 		</div>
 	{showkitcost:}
-		
-		<div class="d-flex justify-content-between align-items-end">
+		<div style="display: flex; justify-content: space-between; align-items: flex-end;">
 			<!--<div><b class="openinfo">{pos.article} {pos.item}</b></div>-->
 			<div>
 				<!--<span class="a openinfo" style="color:red">Показать комплектацию</span>-->
 				<!--<span class="a closeinfo" style="color:red">Свернуть</span>-->
 			</div>
 		</div>
-		<div class="d-flex justify-content-between align-items-end">
-			<div style="flex-grow: 1" class="text-right text-lg-left">Цена комплекта ({pos.kitcount}):&nbsp;</div>
+		<div style="display: flex; justify-content: space-between; align-items: flex-end;">
+			<div style="flex-grow: 1" class="{~sid}">
+				<style media="(max-width: 991px)">
+					.{~sid} {
+						text-align: right;
+					}
+				</style>
+				Цена комплекта ({pos.kitcount}):&nbsp;
+			</div>
 			<div><b>{pos:extend.itemcost}</b></div>
 		</div>
 {groups:}
@@ -227,7 +235,8 @@
 			</div>
 			<div>
 				<span {....iscatkit??:deftitle} 
-					class="{....iscatkit??:disabled} btn btn-sm btn-outline-warning catkit-ico catkit del ml-2"
+					style="margin-left: 0.5rem"
+					class="{....iscatkit??:disabled} btn btn-sm btn-outline-warning catkit-ico catkit del"
 					data-article_nick="{article_nick}" 
 					data-item_num="{item_num}"
 				>-</span>
@@ -298,13 +307,13 @@
 		<div>{::prkit-table}</div>
 		{prkit-table:}
 
-			<div class="d-flex mb-2">
-				<div class="mr-2">
+			<div style="display: flex; margin-bottom: 0.5rem">
+				<div style="margin-right: 0.5rem">
 					<a href="/{:cat.pospath}{:cat.mark.set}"><img src="/-imager/?h=70&src={images.0}"></a>
 				</div>
-				<div class="flex-grow-1" style="min-width:0">
+				<div style="flex-grow: 1; min-width:0">
 					<div><a href="/{:cat.pospath}{:cat.mark.set}">{Наименование} <b>{article}</b></a></div>
-					<div class="d-flex">
+					<div style="display: flex;">
 						<div style="flex-grow: 1; margin-right:3px">
 							{~length(items)?items::prkititems2item?:prkitone2item}
 						</div>
@@ -324,7 +333,7 @@
 				data-item_num="{...item_num}">+</span>
 			</div>
 		{prkititems2cost:}
-			{(Цена|...Цена)?:prkititems2costshow?:nocost}
+			{(Цена|...Цена)?:prkititems2costshow}
 			{prkititems2costshow:}
 			<div>
 				{:extend.itemcost}&nbsp;<span class="{~inArray(kitid,data.pos.catkits)?:font-weight-bold} catkit add btn btn-sm btn-warning catkit-ico"
