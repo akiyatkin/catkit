@@ -13,30 +13,30 @@ Event::handler('Showcase.onconfig', function (&$opt) {
 });
 
 //showcase.php
-	Event::handler('Showcase-catalog.onload', function ($obj) {
+Event::handler('Showcase-catalog.onload', function ($obj) {
 
-		$pos = &$obj['pos']; //pos после Xlsx::make()
-		if (empty($pos['more']['Совместимость'])) return; //Комплект к которому относится позиция
-		$kit = Catkit::explode($pos['more']['Совместимость'], $pos['producer']);
-		$pos['more']['compatibilities'] = Catkit::implode($kit,',');//compatibilities комплекты в правильной записи
-	});
+	$pos = &$obj['pos']; //pos после Xlsx::make()
+	if (empty($pos['more']['Совместимость'])) return; //Комплект к которому относится позиция
+	$kit = Catkit::explode($pos['more']['Совместимость'], $pos['producer']);
+	$pos['more']['compatibilities'] = Catkit::implode($kit,',');//compatibilities комплекты в правильной записи
+});
 
-	Event::handler('Showcase-priceonload', function () {
-		//Нужно посчитать комплекты для всех позиций по умолчанию
-		//Есть Комлпектация и нет Цены
-		$mark = Showcase::getDefaultMark();
-		$mark->setVal(':more.Комплектация.yes=1:count=5000');
-		$md = $mark->getData();
-		$data = Showcase::search($md);
-		foreach ($data['list'] as $pos) {
-			//Позиции у которых есть Комплектация, были найдены и для них рассчиталась цена, которую и нужно записать в цену по умаолчанию.
-			//Event::fire('Showcase-position.onsearch', $pos);
-			//$r = Catkit::init($pos);
-			//if (!$r) continue;
-			Prices::deleteProp($pos['model_id'], $pos['item_num'], 'Цена');
-			if (isset($pos['Цена'])) Prices::insertProp($pos['model_id'], $pos['item_num'], 'Цена', $pos['Цена']);
-		}
-	});
+Event::handler('Showcase-priceonload', function () {
+	//Нужно посчитать комплекты для всех позиций по умолчанию
+	//Есть Комлпектация и нет Цены
+	$mark = Showcase::getDefaultMark();
+	$mark->setVal(':more.'.Path::encode('Комплектация').'yes=1:count=5000');
+	$md = $mark->getData();
+	$data = Showcase::search($md);
+	foreach ($data['list'] as $pos) {
+		//Позиции у которых есть Комплектация, были найдены и для них рассчиталась цена, которую и нужно записать в цену по умаолчанию.
+		//Event::fire('Showcase-position.onsearch', $pos);
+		//$r = Catkit::init($pos);
+		//if (!$r) continue;
+		Prices::deleteProp($pos['model_id'], $pos['item_num'], 'Цена');
+		if (isset($pos['Цена'])) Prices::insertProp($pos['model_id'], $pos['item_num'], 'Цена', $pos['Цена']);
+	}
+});
 
 Event::handler('Showcase-position.onsearch', function (&$pos){
 
@@ -155,11 +155,9 @@ Event::handler('Showcase-position.onshow', function (&$pos){
 });
 
 function setKitPhoto(&$pos) {
-
 	/*
 		Если есть выбранные комплектации, то по одной фото каждого комплектующего добавляется в систему в добавленном порядке. В showcase.json добавлен параметр для групп firstkitphoto, в нём указывается "Группа в комплекте" фото комплектующих из этой группы встаёт на первое место. Но не выше, чем собственное фото системы.
 	*/
-	
 	if (isset($pos['kit'])) {
 		//$group = Showcase::getGroup($pos['group_nick']);
 		$images = [];
