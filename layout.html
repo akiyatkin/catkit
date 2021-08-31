@@ -245,7 +245,7 @@
 
 		<div style="display: flex;">
 			<div>
-				<img class="mr-1" width="40" src="/-imager?src={images.0}&w=40">
+				<img style="margin-right: 0.25rem" width="40" src="/-imager?src={images.0}&w=40">
 			</div>
 			<div style="flex-grow: 1; min-width:0">
 				<div style="white-space:nowrap; overflow:hidden; text-overflow: ellipsis;">
@@ -255,7 +255,7 @@
 					{Код}
 				</div>
 			</div>
-			<div title="Рекомендуемая цена" style="text-align: right" class="ml-2">{(~inArray(:Цена,itemrows)?Цена?...Цена)?:extend.itemcost}</div>
+			<div title="Рекомендуемая цена" style="text-align: right; margin-left: 0.5rem">{(~inArray(:Цена,itemrows)?Цена?...Цена)?:extend.itemcost}</div>
 		</div>
 		
 		
@@ -266,13 +266,16 @@
 	{~length(compatibilities)?:showCOMPATIBILITIES}
 	{showCOMPATIBILITIES:}
 		<h2 id="kits">Совместимость</h2>
-		<div class="row">
+		<div style="display: grid; gap:20px; grid-template-columns:repeat(auto-fill,minmax(140px,1fr))">
 			{compatibilities::prmykit2}
 		</div>
 		{prmykit2:}{::prmykit}
 		{prmykit:}
-			<div class="col-sm-4 d-flex align-items-center justify-content-center space" 
-				style="
+			<div style="
+					display: flex;
+					margin-bottom: 1rem;
+					justify-content: center;
+					align-items: center;
 					background-image:url('/-imager/?w=528&src={images.0}'); 
 					background-size: contain;
 					background-position: center;
@@ -280,7 +283,9 @@
 					color:white;
 				">
 
-				<div class="my-5 px-2 py-2" style="text-align:center; width:100%; background-color:rgba(0,0,0,0.5);">{Наименование}<br>
+				<div style="margin-top: 3rem; margin-bottom: 3rem; 
+					padding: 0.5rem;
+					text-align:center; width:100%; background-color:rgba(0,0,0,0.5);">{Наименование}<br>
 					<a href="/{:cat.pospath}{:cat.mark.set}"><b>{article}</b></a>
 				</div>
 			</div>
@@ -366,10 +371,10 @@
 					{~length(items)?items::prkititems?(Цена?:prkitone)}
 				</div>
 			</div>
-			{prkitimg:}<center><img class="img-fluid" src="/-imager/?h=400&w=400&crop=1&src={images.0}"></center>
+			{prkitimg:}<center><img style="max-width: 100%" src="/-imager/?h=400&w=400&crop=1&src={images.0}"></center>
 			{prkititems:}
-				<div class="d-flex">
-					<div title="{Код}" class="mr-1" style="flex-grow:1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{Код}</div>
+				<div style="display: flex;">
+					<div title="{Код}" style="margin-right: 0.25rem; flex-grow:1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{Код}</div>
 					<div style="white-space: nowrap;">{(~inArray(:strЦена,...itemrows)?Цена?...Цена)?:prkititemscost}</div>
 					<!-- <div style="white-space: nowrap;">{(Цена|...Цена)?:prkititemscost}</div> -->
 				</div>
