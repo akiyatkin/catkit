@@ -10,8 +10,12 @@ const Catkit = {
 	set: async now => {
 		const { Crumb } = await import('/vendor/infrajs/controller/src/Crumb.js')
 		let base = Crumb.getInstance('catalog').child.child;
-		let go = '/' + (base.child ? base.child : base + '/1');
-		go += (now.length ? ('/' + now.join("&")) : '') + location.search;
+		
+		let go = '/' + (base.child && base.child.name != '1' ? base.child : base)
+		if (now.length) {
+			go = '/' + (base.child ? base.child : base + '/1')
+			go += (now.length ? ('/' + now.join("&")) : '') + location.search
+		}
 		history.pushState(null, null, go);
 		let event = new Event("popstate");
   		window.dispatchEvent(event);

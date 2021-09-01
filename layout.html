@@ -255,11 +255,8 @@
 					{Код}
 				</div>
 			</div>
-			<div title="Рекомендуемая цена" style="text-align: right; margin-left: 0.5rem">{(~inArray(:Цена,itemrows)?Цена?...Цена)?:extend.itemcost}</div>
+			<div title="Рекомендуемая цена" style="text-align: right; margin-left: 0.5rem">{:extend.itemcost}</div>
 		</div>
-		
-		
-		
 	</div>
 	{deftitle:} title="Комплектация по умолчанию" 
 {COMPATIBILITIES:}
@@ -353,7 +350,7 @@
 					data-item_num="{item_num}">+</span>
 			</div>
 	{kitlist-blocks:}
-		<div style="display: grid; gap:20px; grid-template-columns: repeat(auto-fill,minmax(210px, 1fr))">{::prkit}</div>
+		<div style="display: grid; gap:15px; grid-template-columns: repeat(auto-fill,minmax(167.5px, 1fr))">{::prkit}</div>
 		{prkit:}
 			<div>
 				{images.0?:prkitimg}

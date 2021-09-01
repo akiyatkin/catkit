@@ -41,11 +41,12 @@ class Catkit {
 			else $item_num = 1;
 
 			$p = Showcase::getModelEasy($producer_nick, $article_nick, $item_num);
+			if (!$p) return null;
 			if (!$p) $p = [];
 			$p['present'] = trim($catkit);
 			return $p;
 		}, $r);
-		
+		$catkit = array_filter($catkit);
 		$kit = [];
 
 		foreach ($catkit as $res) {
