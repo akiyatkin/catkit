@@ -4,5 +4,6 @@
 	"onlyclient":true,
 	"tplroot":"CATKITPRESENT",
 	"name":"catkit",
-	"jsontpl":"-showcase/api2/pos?producer_nick={crumb.child.name}&article_nick={crumb.child.child.name}&item_num={crumb.child.child.child.name|:1}&catkit={~encode(crumb.child.child.child.child.name)}"
+	"jsontpl":"-showcase/api2/poskit?producer_nick={crumb.child.name}&article_nick={crumb.child.child.name}&item_num={crumb.child.child.child.name|:1}&catkit={~encode(crumb.child.child.child.child.name)}",
+	"jsontpl2":"-showcase/api2/pos?producer_nick={crumb.child.name}&article_nick={crumb.child.child.name}&item_num={crumb.child.child.child.name|:1}&catkit={~encode(crumb.child.child.child.child.name)}"
 }
