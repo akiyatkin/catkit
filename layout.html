@@ -311,7 +311,7 @@
 
 			<div style="display: flex; margin-bottom: 0.5rem">
 				<div style="margin-right: 0.5rem">
-					<a href="/{:cat.pospath}{:cat.mark.set}"><img src="/-imager/?h=70&src={images.0}"></a>
+					<a href="/{:cat.pospath}{:cat.mark.set}"><img style="max-width:none; height:auto" src="/-imager/?w=80&src={images.0}"></a>
 				</div>
 				<div style="flex-grow: 1; min-width:0">
 					<div><a href="/{:cat.pospath}{:cat.mark.set}">{Наименование} <b>{article}</b></a></div>
@@ -335,13 +335,13 @@
 				data-item_num="{...item_num}">+</span>
 			</div>
 		{prkititems2cost:}
-			{(Цена|...Цена)?:prkititems2costshow}
-			{prkititems2costshow:}
 			<div>
+				{(Цена|...Цена)?:prkititems2costshow}&nbsp;
+			</div>
+			{prkititems2costshow:}
 				{:extend.itemcost}&nbsp;<span class="{~inArray(kitid,data.pos.catkits)?:font-weight-bold} catkit add btn btn-sm btn-warning catkit-ico"
 				data-article_nick="{...article_nick}" 
 				data-item_num="{...item_num}">+</span>
-			</div>
 		{prkitone2item:}
 		{prkitone2cost:}
 			<div>
@@ -354,7 +354,7 @@
 		{prkit:}
 			<div>
 				{images.0?:prkitimg}
-				<div >
+				<div>
 					<div style="display: flex; flex-direction: column; min-width:0;">
 						<div title="{Наименование}" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{Наименование}&nbsp;</div>
 						<div style="flex-grow:1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
@@ -372,10 +372,13 @@
 			{prkititems:}
 				<div style="display: flex;">
 					<div title="{Код}" style="margin-right: 0.25rem; flex-grow:1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{Код}</div>
-					<div style="white-space: nowrap;">{(~inArray(:strЦена,...itemrows)?Цена?...Цена)?:prkititemscost}</div>
+					<div style="white-space: nowrap;">
+						{(~inArray(:strЦена,...itemrows)?Цена?...Цена)?:prkititemscost}
+					</div>
 					<!-- <div style="white-space: nowrap;">{(Цена|...Цена)?:prkititemscost}</div> -->
 				</div>
-				{strЦена:}Цена{prkititemscost:}
+				{Цена:}Цена
+				{prkititemscost:}
 				<div style="text-align: right;">{:extend.itemcost}
 					
 					<span class="{~inArray(kitid,data.pos.catkits)?:font-weight-bold} catkit add btn btn-sm btn-warning catkit-ico"
